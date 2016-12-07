@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['berardialessandro@gmail.com']
 
   spec.summary       = 'Rack Middleware filter for sensitive data'
-  spec.description   = 'A Rack Middleware level Rails filter for sensitive data'
+  spec.description   = 'A Rack Middleware level filter for sensitive data'
   spec.homepage      = 'https://github.com/sealink/sensitive_data_filter'
   spec.license       = 'MIT'
 
@@ -20,6 +20,9 @@ Gem::Specification.new do |spec|
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
+
+  spec.add_dependency 'rack', '>= 1.4'
+  spec.add_dependency 'facets', '~> 3.1'
 
   spec.add_development_dependency 'bundler', '~> 1.13'
   spec.add_development_dependency 'rake', '~> 10.0'

@@ -12,3 +12,6 @@ Style/TrivialAccessors:
 
 Style/SignalException:
   EnforcedStyle: semantic
+
+Style/SafeNavigation:
+  Enabled: false

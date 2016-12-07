@@ -20,7 +20,34 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Enable the middleware
+
+E.g. for Rails, add the following in application.rb
+
+```ruby
+# --- Sensitive Data Filtering ---
+config.middleware.use SensitiveDataFilter::Middleware::Filter
+```
+
+### Configuration
+
+```ruby
+SensitiveDataFilter.config do |config|
+  config.enable_types :credit_card # Already defaults to :credit_card if not specified
+  config.on_occurrence do |occurrence| 
+    # Report occurrence
+  end 
+end
+```
+
+An occurrence object has the following properties:
+
+* origin_ip:       the IP address that originated the request
+* request_method:  the HTTP method for the request (GET, POST, etc.)
+* url:             the URL of the request
+* filtered_params: the parameters sent with the request, with sensitive data filtered
+* session:         the session properties for the request
+* matches_count:   the number of matches per data type, e.g. { 'CreditCard' => 1 }
 
 ## Development
 
