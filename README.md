@@ -1,5 +1,11 @@
 # SensitiveDataFilter
 
+[![Gem Version](https://badge.fury.io/rb/sensitive_data_filter.svg)](http://badge.fury.io/rb/sensitive_data_filter)
+[![Build Status](https://travis-ci.org/sealink/sensitive_data_filter.svg?branch=master)](https://travis-ci.org/sealink/sensitive_data_filter)
+[![Coverage Status](https://coveralls.io/repos/sealink/sensitive_data_filter/badge.svg)](https://coveralls.io/r/sealink/sensitive_data_filter)
+[![Dependency Status](https://gemnasium.com/sealink/sensitive_data_filter.svg)](https://gemnasium.com/sealink/sensitive_data_filter)
+[![Code Climate](https://codeclimate.com/github/sealink/sensitive_data_filter/badges/gpa.svg)](https://codeclimate.com/github/sealink/sensitive_data_filter)
+
 A Rack Middleware level Rails filter for sensitive data
 
 ## Installation
