@@ -50,7 +50,7 @@ describe SensitiveDataFilter::Middleware::EnvFilter do
 
   context 'when sensitive data is not detected' do
     let(:sensitive_data?) { false }
-    specify { expect(env_parser_copy).to_not have_received :mask! }
+    specify { expect(env_parser_copy).not_to have_received :mask! }
     specify { expect(env_filter.occurrence?).to be false }
     specify { expect(env_filter.occurrence).to be_nil }
     specify { expect(env_filter.filtered_env).to eq filtered_env }
