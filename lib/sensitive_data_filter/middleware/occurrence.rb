@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'facets/string/titlecase'
 
 module SensitiveDataFilter
   module Middleware
