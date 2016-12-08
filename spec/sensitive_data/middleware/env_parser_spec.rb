@@ -103,18 +103,35 @@ describe SensitiveDataFilter::Middleware::EnvParser do
   end
 
   describe '#mask!' do
-    let(:uri)    { base_uri + '?id=42&credit_card=4111%201111%201111%201111' }
-    let(:method) { 'POST' }
-    let(:input)  { 'credit_card=4111 1111 1111 1111' }
-
-    let(:filtered_query_params) { { 'id' => '42', 'credit_card' => '[FILTERED]' } }
-    let(:filtered_body_params) { { 'credit_card' => '[FILTERED]' } }
+    let(:query_params) { { 'sensitive_query' => 'sensitive_data' } }
+    let(:body_params) { { 'sensitive_body' => 'sensitive_data' } }
 
     before do
-      env_parser.mask!
+      env_parser.query_params = { sensitive_query: 'sensitive_data' }
+      env_parser.body_params  = { sensitive_body: 'sensitive_data' }
     end
 
-    specify { expect(env_parser.query_params).to eq filtered_query_params }
-    specify { expect(env_parser.body_params).to eq filtered_body_params }
+    context 'before masking' do
+      specify { expect(env_parser.query_params).to eq 'sensitive_query' => 'sensitive_data' }
+      specify { expect(env_parser.body_params).to eq 'sensitive_body' => 'sensitive_data' }
+    end
+
+    context 'after masking' do
+      let(:mask) { double }
+      let(:filtered_query_params) { { 'sensitive_query' => '[FILTERED]' } }
+      let(:filtered_body_params) { { 'sensitive_body' => '[FILTERED]' } }
+
+      before do
+        stub_const 'SensitiveDataFilter::Mask', mask
+        allow(mask).to receive(:mask_hash).with(query_params).and_return filtered_query_params
+        allow(mask).to receive(:mask_hash).with(body_params).and_return filtered_body_params
+        env_parser.mask!
+      end
+
+      specify { expect(mask).to have_received(:mask_hash).with query_params }
+      specify { expect(mask).to have_received(:mask_hash).with body_params }
+      specify { expect(env_parser.query_params).to eq filtered_query_params }
+      specify { expect(env_parser.body_params).to eq filtered_body_params }
+    end
   end
 end
