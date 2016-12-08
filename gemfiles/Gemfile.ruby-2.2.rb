@@ -5,4 +5,4 @@ source 'https://rubygems.org'
 gem 'rack', '~> 1.4'
 
 # Specify your gem's dependencies in sensitive_data_filter.gemspec
-gemspec
+gemspec path: '../'
