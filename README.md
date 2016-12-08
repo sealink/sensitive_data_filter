@@ -54,6 +54,17 @@ An occurrence object has the following properties:
 It also exposes `to_h` and `to_s` methods for hash and string representation respectively.  
 Please note that these representations omit sensitive data, i.e. `original_params` and `matches` are not included.
 
+#### Important Note
+
+You might want to filter sensitive parameters (e.g: passwords).
+In Rails you can do something like:
+
+```ruby
+filters = Rails.application.config.filter_parameters
+filter  = ActionDispatch::Http::ParameterFilter.new filters
+filter.filter @occurrence.filtered_params
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
