@@ -57,7 +57,7 @@ describe SensitiveDataFilter::Middleware::EnvParser do
   let(:input)  { nil }
 
   # :ip, :request_method, :url, :params
-  context '#ip' do
+  describe '#ip' do
     let(:origin_ip) { '127.0.0.1' }
     before do
       env['REMOTE_ADDR'] = origin_ip
@@ -65,31 +65,31 @@ describe SensitiveDataFilter::Middleware::EnvParser do
     specify { expect(env_parser.ip).to eq origin_ip }
   end
 
-  context '#request_method' do
+  describe '#request_method' do
     specify { expect(env_parser.request_method).to eq method }
   end
 
-  context '#url' do
+  describe '#url' do
     specify { expect(env_parser.url).to eq uri }
   end
 
-  context '#params' do
+  describe '#params' do
     specify { expect(env_parser.params).to eq 'id' => '42' }
   end
 
-  context '#session' do
+  describe '#session' do
     before do
       env['rack.session'] = { 'session_id' => '01ab02cd' }
     end
     specify { expect(env_parser.session).to eq 'session_id' => '01ab02cd' }
   end
 
-  context '#copy' do
-    let(:copy) { env_parser.copy }
+  describe '#copy' do
+    let(:masked_env_parser) { env_parser.copy }
 
     before do
-      copy.query_params = { id: 2 }
-      copy.body_params = { test: 2 }
+      masked_env_parser.query_params = { id: 2 }
+      masked_env_parser.body_params = { test: 2 }
 
       env_parser.query_params = { id: 1 }
       env_parser.body_params = { test: 1 }
@@ -98,7 +98,23 @@ describe SensitiveDataFilter::Middleware::EnvParser do
     specify { expect(env_parser.query_params).to eq 'id' => '1' }
     specify { expect(env_parser.body_params).to eq 'test' => '1' }
 
-    specify { expect(copy.query_params).to eq 'id' => '2' }
-    specify { expect(copy.body_params).to eq 'test' => '2' }
+    specify { expect(masked_env_parser.query_params).to eq 'id' => '2' }
+    specify { expect(masked_env_parser.body_params).to eq 'test' => '2' }
+  end
+
+  describe '#mask!' do
+    let(:uri)    { base_uri + '?id=42&credit_card=4111%201111%201111%201111' }
+    let(:method) { 'POST' }
+    let(:input)  { 'credit_card=4111 1111 1111 1111' }
+
+    let(:filtered_query_params) { { 'id' => '42', 'credit_card' => '[FILTERED]' } }
+    let(:filtered_body_params) { { 'credit_card' => '[FILTERED]' } }
+
+    before do
+      env_parser.mask!
+    end
+
+    specify { expect(env_parser.query_params).to eq filtered_query_params }
+    specify { expect(env_parser.body_params).to eq filtered_body_params }
   end
 end
