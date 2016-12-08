@@ -8,7 +8,7 @@ module SensitiveDataFilter
         @env = env
         @original_env_parser = EnvParser.new env
         @filtered_env_parser = @original_env_parser.copy
-        filter!
+        @filtered_env_parser.mask! if @scanner.sensitive_data?
       end
 
       def filtered_env
@@ -25,11 +25,6 @@ module SensitiveDataFilter
       end
 
       private
-
-      def filter!
-        return unless scanner.sensitive_data?
-        ParameterMasker.new(@filtered_env_parser).mask!
-      end
 
       def scanner
         @scanner ||= ParameterScanner.new @original_env_parser
