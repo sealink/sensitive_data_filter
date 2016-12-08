@@ -57,7 +57,7 @@ describe SensitiveDataFilter::Middleware::EnvParser do
   let(:input)  { nil }
 
   # :ip, :request_method, :url, :params
-  context '#ip' do
+  describe '#ip' do
     let(:origin_ip) { '127.0.0.1' }
     before do
       env['REMOTE_ADDR'] = origin_ip
@@ -65,31 +65,31 @@ describe SensitiveDataFilter::Middleware::EnvParser do
     specify { expect(env_parser.ip).to eq origin_ip }
   end
 
-  context '#request_method' do
+  describe '#request_method' do
     specify { expect(env_parser.request_method).to eq method }
   end
 
-  context '#url' do
+  describe '#url' do
     specify { expect(env_parser.url).to eq uri }
   end
 
-  context '#params' do
+  describe '#params' do
     specify { expect(env_parser.params).to eq 'id' => '42' }
   end
 
-  context '#session' do
+  describe '#session' do
     before do
       env['rack.session'] = { 'session_id' => '01ab02cd' }
     end
     specify { expect(env_parser.session).to eq 'session_id' => '01ab02cd' }
   end
 
-  context '#copy' do
-    let(:copy) { env_parser.copy }
+  describe '#copy' do
+    let(:masked_env_parser) { env_parser.copy }
 
     before do
-      copy.query_params = { id: 2 }
-      copy.body_params = { test: 2 }
+      masked_env_parser.query_params = { id: 2 }
+      masked_env_parser.body_params = { test: 2 }
 
       env_parser.query_params = { id: 1 }
       env_parser.body_params = { test: 1 }
@@ -98,7 +98,40 @@ describe SensitiveDataFilter::Middleware::EnvParser do
     specify { expect(env_parser.query_params).to eq 'id' => '1' }
     specify { expect(env_parser.body_params).to eq 'test' => '1' }
 
-    specify { expect(copy.query_params).to eq 'id' => '2' }
-    specify { expect(copy.body_params).to eq 'test' => '2' }
+    specify { expect(masked_env_parser.query_params).to eq 'id' => '2' }
+    specify { expect(masked_env_parser.body_params).to eq 'test' => '2' }
+  end
+
+  describe '#mask!' do
+    let(:query_params) { { 'sensitive_query' => 'sensitive_data' } }
+    let(:body_params) { { 'sensitive_body' => 'sensitive_data' } }
+
+    before do
+      env_parser.query_params = { sensitive_query: 'sensitive_data' }
+      env_parser.body_params  = { sensitive_body: 'sensitive_data' }
+    end
+
+    context 'before masking' do
+      specify { expect(env_parser.query_params).to eq 'sensitive_query' => 'sensitive_data' }
+      specify { expect(env_parser.body_params).to eq 'sensitive_body' => 'sensitive_data' }
+    end
+
+    context 'after masking' do
+      let(:mask) { double }
+      let(:filtered_query_params) { { 'sensitive_query' => '[FILTERED]' } }
+      let(:filtered_body_params) { { 'sensitive_body' => '[FILTERED]' } }
+
+      before do
+        stub_const 'SensitiveDataFilter::Mask', mask
+        allow(mask).to receive(:mask_hash).with(query_params).and_return filtered_query_params
+        allow(mask).to receive(:mask_hash).with(body_params).and_return filtered_body_params
+        env_parser.mask!
+      end
+
+      specify { expect(mask).to have_received(:mask_hash).with query_params }
+      specify { expect(mask).to have_received(:mask_hash).with body_params }
+      specify { expect(env_parser.query_params).to eq filtered_query_params }
+      specify { expect(env_parser.body_params).to eq filtered_body_params }
+    end
   end
 end
