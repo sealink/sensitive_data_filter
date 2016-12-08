@@ -107,14 +107,14 @@ describe SensitiveDataFilter::Middleware::EnvParser do
     let(:method) { 'POST' }
     let(:input)  { 'credit_card=4111 1111 1111 1111' }
 
-    let(:filtered_query_params) { { 'id' => '42', 'credit_card' => '[FILTERED]' } }
-    let(:filtered_body_params) { { 'credit_card' => '[FILTERED]' } }
+    let(:clean_query_params) { { 'id' => '42', 'credit_card' => '[FILTERED]' } }
+    let(:clean_body_params)  { { 'credit_card' => '[FILTERED]' } }
 
     before do
       env_parser.mask!
     end
 
-    specify { expect(env_parser.query_params).to eq filtered_query_params }
-    specify { expect(env_parser.body_params).to eq filtered_body_params }
+    specify { expect(env_parser.query_params).to eq clean_query_params }
+    specify { expect(env_parser.body_params).to eq clean_body_params }
   end
 end

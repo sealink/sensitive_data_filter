@@ -44,16 +44,16 @@ describe SensitiveDataFilter::Mask do
 
   describe '#mask_hash' do
     let(:hash) { { a: nil, b: 42, c: 'unmasked' } }
-    let(:original_hash) { hash.dup }
+    let(:dirty_hash) { hash.dup }
     let(:expected_result) { { a: nil, b: 42, c: masked_value } }
     let(:result) { SensitiveDataFilter::Mask.mask_hash hash }
 
     before do
-      original_hash
+      dirty_hash
       result
     end
 
     specify { expect(result).to eq expected_result }
-    specify { expect(hash).to eq original_hash }
+    specify { expect(hash).to eq dirty_hash }
   end
 end

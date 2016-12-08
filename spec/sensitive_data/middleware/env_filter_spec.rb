@@ -6,9 +6,9 @@ require 'sensitive_data_filter/middleware/env_filter'
 
 describe SensitiveDataFilter::Middleware::EnvFilter do
   let(:env_parser_class) { double }
-  let(:env_parser)       { double 'original_env_parser' }
-  let(:env_parser_copy)  { double 'filtered_env_parser', env: filtered_env }
-  let(:filtered_env)     { double 'filtered_env' }
+  let(:env_parser)       { double 'dirty_env_parser' }
+  let(:env_parser_copy)  { double 'clean_env_parser', env: clean_env }
+  let(:clean_env)        { double 'clean_env' }
 
   let(:parameter_scanner_class) { double }
   let(:parameter_scanner)       { double sensitive_data?: sensitive_data?, matches: scan_matches }
@@ -45,7 +45,7 @@ describe SensitiveDataFilter::Middleware::EnvFilter do
     specify { expect(env_parser_copy).to have_received :mask! }
     specify { expect(env_filter.occurrence?).to be true }
     specify { expect(env_filter.occurrence).to eq occurrence }
-    specify { expect(env_filter.filtered_env).to eq filtered_env }
+    specify { expect(env_filter.clean_env).to eq clean_env }
   end
 
   context 'when sensitive data is not detected' do
@@ -53,6 +53,6 @@ describe SensitiveDataFilter::Middleware::EnvFilter do
     specify { expect(env_parser_copy).to_not have_received :mask! }
     specify { expect(env_filter.occurrence?).to be false }
     specify { expect(env_filter.occurrence).to be_nil }
-    specify { expect(env_filter.filtered_env).to eq filtered_env }
+    specify { expect(env_filter.clean_env).to eq clean_env }
   end
 end

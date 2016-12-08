@@ -8,15 +8,15 @@ module SensitiveDataFilter
 
       def initialize(env)
         @env = env
-        @original_env_parser = EnvParser.new(env)
-        @scanner = ParameterScanner.new(@original_env_parser)
-        @filtered_env_parser = @original_env_parser.copy
-        @filtered_env_parser.mask! if @scanner.sensitive_data?
+        @dirty_env_parser = EnvParser.new(env)
+        @scanner = ParameterScanner.new(@dirty_env_parser)
+        @clean_env_parser = @dirty_env_parser.copy
+        @clean_env_parser.mask! if @scanner.sensitive_data?
         @occurrence = build_occurrence
       end
 
-      def filtered_env
-        @filtered_env_parser.env
+      def clean_env
+        @clean_env_parser.env
       end
 
       def occurrence?
@@ -27,7 +27,7 @@ module SensitiveDataFilter
 
       def build_occurrence
         if @scanner.sensitive_data?
-          Occurrence.new(@original_env_parser, @filtered_env_parser, @scanner.matches)
+          Occurrence.new(@dirty_env_parser, @clean_env_parser, @scanner.matches)
         end
       end
     end
