@@ -6,7 +6,7 @@
 [![Dependency Status](https://gemnasium.com/sealink/sensitive_data_filter.svg)](https://gemnasium.com/sealink/sensitive_data_filter)
 [![Code Climate](https://codeclimate.com/github/sealink/sensitive_data_filter/badges/gpa.svg)](https://codeclimate.com/github/sealink/sensitive_data_filter)
 
-A Rack Middleware level Rails filter for sensitive data
+A Rack Middleware filter for sensitive data
 
 ## Installation
 
