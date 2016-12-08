@@ -30,7 +30,7 @@ module SensitiveDataFilter
       end
 
       def copy
-        copy = self.class.new(@env.clone)
+        self.class.new(@env.clone)
       end
 
       def mask!
