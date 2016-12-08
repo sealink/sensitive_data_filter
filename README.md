@@ -45,9 +45,14 @@ An occurrence object has the following properties:
 * origin_ip:       the IP address that originated the request
 * request_method:  the HTTP method for the request (GET, POST, etc.)
 * url:             the URL of the request
+* original_params: the parameters sent with the request
 * filtered_params: the parameters sent with the request, with sensitive data filtered
 * session:         the session properties for the request
+* matches:         the matched sensitive data
 * matches_count:   the number of matches per data type, e.g. { 'CreditCard' => 1 }
+
+It also exposes `to_h` and `to_s` methods for hash and string representation respectively.  
+Please note that these representations omit sensitive data, i.e. `original_params` and `matches` are not included.
 
 ## Development
 

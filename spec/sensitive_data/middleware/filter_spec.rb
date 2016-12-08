@@ -5,18 +5,12 @@ require 'spec_helper'
 require 'sensitive_data_filter/middleware/filter'
 
 describe SensitiveDataFilter::Middleware::Filter do
-  let(:env_parser_class) { double }
-  let(:env_parser)       { double }
-
-  let(:parameter_scanner_class) { double }
-  let(:parameter_scanner)       { double sensitive_data?: sensitive_data?, matches: scan_matches }
-  let(:scan_matches)            { double }
-
-  let(:parameter_masker_class) { double }
-  let(:parameter_masker)       { double }
-
-  let(:occurrence_class) { double }
-  let(:occurrence)       { double }
+  let(:env_filter_class) { double }
+  let(:env_filter)       {
+    double occurrence?: occurrence?, occurrence: occurrence, filtered_env: filtered_env
+  }
+  let(:occurrence)   { double }
+  let(:filtered_env) { double 'filtered_env' }
 
   let(:app)         { double }
   let(:middleware)  { SensitiveDataFilter::Middleware::Filter }
@@ -24,38 +18,22 @@ describe SensitiveDataFilter::Middleware::Filter do
   let(:env)         { double }
 
   before do
-    stub_const 'SensitiveDataFilter::Middleware::EnvParser', env_parser_class
-    allow(env_parser_class).to receive(:new).with(env).and_return env_parser
-
-    stub_const 'SensitiveDataFilter::Middleware::ParameterScanner', parameter_scanner_class
-    allow(parameter_scanner_class).to receive(:new).with(env_parser).and_return parameter_scanner
-
-    stub_const 'SensitiveDataFilter::Middleware::ParameterMasker', parameter_masker_class
-    allow(parameter_masker_class).to receive(:new).with(env_parser).and_return parameter_masker
-    allow(parameter_masker).to receive(:mask!)
-
-    stub_const 'SensitiveDataFilter::Middleware::Occurrence', occurrence_class
-    allow(occurrence_class).to receive(:new).with(env_parser, scan_matches).and_return occurrence
+    stub_const 'SensitiveDataFilter::Middleware::EnvFilter', env_filter_class
+    allow(env_filter_class).to receive(:new).with(env).and_return env_filter
     allow(SensitiveDataFilter).to receive(:handle_occurrence).with occurrence
-
-    allow(app).to receive(:call)
-
+    allow(app).to receive(:call).with filtered_env
     stack.call(env)
   end
 
-  context 'when sensitive data is detected' do
-    let(:sensitive_data?) { true }
-    specify {
-      expect(parameter_masker).to have_received(:mask!).ordered
-      expect(SensitiveDataFilter).to have_received(:handle_occurrence).with occurrence
-    }
-    specify { expect(app).to have_received(:call).with env }
+  context 'when an occurrence is detected' do
+    let(:occurrence?) { true }
+    specify { expect(SensitiveDataFilter).to have_received(:handle_occurrence).with occurrence }
+    specify { expect(app).to have_received(:call).with filtered_env }
   end
 
   context 'when sensitive data is detected' do
-    let(:sensitive_data?) { false }
-    specify { expect(parameter_masker).not_to have_received :mask! }
+    let(:occurrence?) { false }
     specify { expect(SensitiveDataFilter).not_to have_received(:handle_occurrence) }
-    specify { expect(app).to have_received(:call).with env }
+    specify { expect(app).to have_received(:call).with filtered_env }
   end
 end
