@@ -6,12 +6,14 @@ require 'sensitive_data_filter/scan'
 
 describe SensitiveDataFilter::Scan do
   let(:enabled_types) { [SensitiveDataFilter::Types::CreditCard] }
+  let(:whitelisted?)  { false }
 
   let(:credit_card_scanner) { double name: 'CreditCard', scan: matches }
 
   before do
     stub_const 'SensitiveDataFilter::Types::CreditCard', credit_card_scanner
     allow(SensitiveDataFilter).to receive(:enabled_types).and_return enabled_types
+    allow(SensitiveDataFilter).to receive(:whitelisted?).and_return whitelisted?
   end
 
   let(:scan) { SensitiveDataFilter::Scan.new(value) }
@@ -26,6 +28,12 @@ describe SensitiveDataFilter::Scan do
       let(:enabled_types) { [] }
       specify { expect(scan.matches?).to be false }
       specify { expect(scan.matches).to be_empty }
+    end
+
+    context 'when the matches are whitelisted' do
+      let(:whitelisted?) { true }
+      specify { expect(scan.matches?).to be false }
+      specify { expect(scan.matches).to eq 'CreditCard' => [] }
     end
   end
 

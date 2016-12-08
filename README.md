@@ -42,7 +42,8 @@ SensitiveDataFilter.config do |config|
   config.enable_types :credit_card # Already defaults to :credit_card if not specified
   config.on_occurrence do |occurrence| 
     # Report occurrence
-  end 
+  end
+  config.whitelist pattern1, pattern2 # Allows specifying patterns to whitelist matches
 end
 ```
 

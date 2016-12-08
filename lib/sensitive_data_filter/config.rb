@@ -16,6 +16,10 @@ module SensitiveDataFilter
     handler.call(occurrence) if handler
   end
 
+  def self.whitelisted?(value)
+    config.whitelist_patterns.any? { |pattern| value.match pattern }
+  end
+
   class Config
     DEFAULT_TYPES = %i(credit_card).freeze
 
@@ -31,6 +35,14 @@ module SensitiveDataFilter
 
     def on_occurrence(&block)
       @occurrence_handler = block
+    end
+
+    def whitelist(*patterns)
+      @whitelist_patterns = patterns
+    end
+
+    def whitelist_patterns
+      @whitelist_patterns ||= []
     end
   end
 end

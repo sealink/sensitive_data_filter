@@ -9,12 +9,18 @@ module SensitiveDataFilter
 
     def matches
       @matches ||= SensitiveDataFilter.enabled_types.map.with_object({}) { |scanner, matches|
-        matches[scanner.name.split('::').last] = scanner.scan @value
+        matches[scanner.name.split('::').last] = whitelist scanner.scan(@value)
       }
     end
 
     def matches?
       matches.values.any?(&:present?)
+    end
+
+    private
+
+    def whitelist(matches)
+      matches.reject { |match| SensitiveDataFilter.whitelisted? match }
     end
   end
 end

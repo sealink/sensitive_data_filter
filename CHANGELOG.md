@@ -5,4 +5,5 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
 ### Added
+- Whitelisting of matches
 - Initial release

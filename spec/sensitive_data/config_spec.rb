@@ -51,4 +51,20 @@ describe SensitiveDataFilter do
       specify { expect(handler).to have_received(:handle).with occurrence }
     end
   end
+
+  describe '#whitelisted?' do
+    context 'when a whitelist is configured' do
+      before do
+        SensitiveDataFilter.config do |config|
+          config.whitelist 'is allowed', 'is acceptable'
+        end
+      end
+
+      let(:allowed_value) { 'this is allowed' }
+      let(:non_allowed_value) { 'this is not allowed' }
+
+      specify { expect(SensitiveDataFilter.whitelisted?(allowed_value)).to be true }
+      specify { expect(SensitiveDataFilter.whitelisted?(non_allowed_value)).to be false }
+    end
+  end
 end
