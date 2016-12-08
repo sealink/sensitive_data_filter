@@ -19,7 +19,7 @@ module SensitiveDataFilter
       end
 
       def occurrence?
-        occurrence.present?
+        @occurrence.present?
       end
 
       private
