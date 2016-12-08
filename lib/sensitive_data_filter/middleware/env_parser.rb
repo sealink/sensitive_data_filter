@@ -4,7 +4,7 @@ module SensitiveDataFilter
     class EnvParser
       extend Forwardable
 
-      attr_reader :env, :request
+      attr_reader :env
 
       def initialize(env)
         @env = env
@@ -12,12 +12,12 @@ module SensitiveDataFilter
       end
 
       def query_params
-        Rack::Utils.parse_query(request.query_string)
+        Rack::Utils.parse_query(@request.query_string)
       end
 
       def body_params
-        body = request.body.read
-        request.body.rewind
+        body = @request.body.read
+        @request.body.rewind
         Rack::Utils.parse_query(body)
       end
 
@@ -38,7 +38,7 @@ module SensitiveDataFilter
         self.body_params  = SensitiveDataFilter::Mask.mask_hash(body_params)
       end
 
-      def_delegators :request, :ip, :request_method, :url, :params, :session
+      def_delegators :@request, :ip, :request_method, :url, :params, :session
     end
   end
 end
