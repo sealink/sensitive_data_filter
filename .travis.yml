@@ -2,9 +2,6 @@ sudo: false
 language: ruby
 rvm:
   - 2.3.0 # The version of RVM installed on Travis doesn't yet recognise 2.3 as an alias of 2.3.0
-gemfile:
-  - gemfiles/Gemfile.ruby-2.1.rb
-  - gemfiles/Gemfile.ruby-2.2.rb
 matrix:
   include:
     - rvm: 2.1
