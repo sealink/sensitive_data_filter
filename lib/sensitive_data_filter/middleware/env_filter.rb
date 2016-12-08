@@ -25,9 +25,8 @@ module SensitiveDataFilter
       private
 
       def build_occurrence
-        if @scanner.sensitive_data?
-          Occurrence.new(@original_env_parser, @filtered_env_parser, @scanner.matches)
-        end
+        return nil if @scanner.sensitive_data?
+        Occurrence.new(@original_env_parser, @filtered_env_parser, @scanner.matches)
       end
     end
   end
