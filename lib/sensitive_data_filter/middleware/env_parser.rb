@@ -4,6 +4,8 @@ module SensitiveDataFilter
     class EnvParser
       extend Forwardable
 
+      attr_reader :env
+
       def initialize(env)
         @env = env
       end
@@ -27,6 +29,10 @@ module SensitiveDataFilter
       end
 
       def_delegators :request, :ip, :request_method, :url, :params, :session
+
+      def copy
+        self.class.new(@env.clone)
+      end
 
       private
 

@@ -12,6 +12,8 @@ describe SensitiveDataFilter::Middleware::EnvParser do
 
   let(:base_uri) { 'https://test.example.com.au/test' }
 
+  specify { expect(env_parser.env).to eq env }
+
   context 'with a GET request' do
     let(:uri)    { base_uri + '?id=42' }
     let(:method) { 'GET' }
@@ -80,5 +82,23 @@ describe SensitiveDataFilter::Middleware::EnvParser do
       env['rack.session'] = { 'session_id' => '01ab02cd' }
     end
     specify { expect(env_parser.session).to eq 'session_id' => '01ab02cd' }
+  end
+
+  context '#copy' do
+    let(:copy) { env_parser.copy }
+
+    before do
+      copy.query_params = { id: 2 }
+      copy.body_params = { test: 2 }
+
+      env_parser.query_params = { id: 1 }
+      env_parser.body_params = { test: 1 }
+    end
+
+    specify { expect(env_parser.query_params).to eq 'id' => '1' }
+    specify { expect(env_parser.body_params).to eq 'test' => '1' }
+
+    specify { expect(copy.query_params).to eq 'id' => '2' }
+    specify { expect(copy.body_params).to eq 'test' => '2' }
   end
 end
