@@ -70,7 +70,7 @@ describe SensitiveDataFilter::Middleware::Occurrence do
     "Url: https://test.example.com.au/test\n"\
     "Filtered Params: {:credit_cards=>\"[FILTERED] and [FILTERED]\"}\n"\
     "Session: {\"session_id\"=>\"01ab02cd\"}\n"\
-    "Matches Count: {\"CreditCard\"=>2}"
+    'Matches Count: {"CreditCard"=>2}'
   }
 
   specify { expect(occurrence.to_h).to eq expected_to_h }
