@@ -45,7 +45,7 @@ module SensitiveDataFilter
 
       def to_s
         "[SensitiveDataFilter] Sensitive Data detected and masked:\n" +
-          to_h.to_s
+          to_h.map { |attribute, value| "#{attribute.to_s.titlecase}: #{value}" }.join("\n")
       end
     end
   end

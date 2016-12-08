@@ -64,7 +64,13 @@ describe SensitiveDataFilter::Middleware::Occurrence do
   }
 
   let(:expected_to_s) {
-    "[SensitiveDataFilter] Sensitive Data detected and masked:\n" + expected_to_h.to_s
+    "[SensitiveDataFilter] Sensitive Data detected and masked:\n"\
+    "Origin Ip: 127.0.0.1\n"\
+    "Request Method: POST\n"\
+    "Url: https://test.example.com.au/test\n"\
+    "Filtered Params: {:credit_cards=>\"[FILTERED] and [FILTERED]\"}\n"\
+    "Session: {\"session_id\"=>\"01ab02cd\"}\n"\
+    "Matches Count: {\"CreditCard\"=>2}"
   }
 
   specify { expect(occurrence.to_h).to eq expected_to_h }
