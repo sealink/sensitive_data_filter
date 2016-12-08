@@ -28,12 +28,10 @@ describe SensitiveDataFilter::Middleware::EnvFilter do
     allow(env_parser_class).to receive(:new).with(env).and_return env_parser
     allow(env_parser).to receive(:copy).and_return env_parser_copy
 
+    allow(env_parser_copy).to receive(:mask!).and_return env_parser_copy
+
     stub_const 'SensitiveDataFilter::Middleware::ParameterScanner', parameter_scanner_class
     allow(parameter_scanner_class).to receive(:new).with(env_parser).and_return parameter_scanner
-
-    stub_const 'SensitiveDataFilter::Middleware::ParameterMasker', parameter_masker_class
-    allow(parameter_masker_class).to receive(:new).with(env_parser_copy).and_return parameter_masker
-    allow(parameter_masker).to receive(:mask!)
 
     stub_const 'SensitiveDataFilter::Middleware::Occurrence', occurrence_class
     allow(occurrence_class)
@@ -44,17 +42,15 @@ describe SensitiveDataFilter::Middleware::EnvFilter do
 
   context 'when sensitive data is detected' do
     let(:sensitive_data?) { true }
-    specify { expect(parameter_masker_class).to have_received(:new).with env_parser_copy }
-    specify { expect(parameter_masker).to have_received :mask! }
+    specify { expect(env_parser_copy).to have_received :mask! }
     specify { expect(env_filter.occurrence?).to be true }
     specify { expect(env_filter.occurrence).to eq occurrence }
     specify { expect(env_filter.filtered_env).to eq filtered_env }
   end
 
-  context 'when sensitive data is detected' do
+  context 'when sensitive data is not detected' do
     let(:sensitive_data?) { false }
-    specify { expect(parameter_masker_class).not_to have_received(:new) }
-    specify { expect(parameter_masker).not_to have_received :mask! }
+    specify { expect(env_parser_copy).to_not have_received :mask! }
     specify { expect(env_filter.occurrence?).to be false }
     specify { expect(env_filter.occurrence).to be_nil }
     specify { expect(env_filter.filtered_env).to eq filtered_env }
