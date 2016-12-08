@@ -7,7 +7,6 @@ module SensitiveDataFilter
       attr_reader :occurrence
 
       def initialize(env)
-        @env = env
         @original_env_parser = EnvParser.new(env)
         @scanner = ParameterScanner.new(@original_env_parser)
         @filtered_env_parser = @original_env_parser.copy
