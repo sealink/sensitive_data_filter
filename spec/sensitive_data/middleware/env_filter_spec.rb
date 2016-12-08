@@ -28,7 +28,7 @@ describe SensitiveDataFilter::Middleware::EnvFilter do
     allow(env_parser_class).to receive(:new).with(env).and_return env_parser
     allow(env_parser).to receive(:copy).and_return env_parser_copy
 
-    allow(env_parser_copy).to receive(:mask!).and_return env_parser_copy
+    allow(env_parser_copy).to receive(:mask!)
 
     stub_const 'SensitiveDataFilter::Middleware::ParameterScanner', parameter_scanner_class
     allow(parameter_scanner_class).to receive(:new).with(env_parser).and_return parameter_scanner
