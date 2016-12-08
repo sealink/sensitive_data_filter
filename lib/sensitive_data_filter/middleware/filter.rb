@@ -9,7 +9,7 @@ module SensitiveDataFilter
       def call(env)
         env_filter = EnvFilter.new env
         handle_occurrence env_filter
-        @app.call env_filter.clean_env
+        @app.call env_filter.filtered_env
       end
 
       private

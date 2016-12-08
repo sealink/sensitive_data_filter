@@ -40,25 +40,25 @@ config.middleware.use SensitiveDataFilter::Middleware::Filter
 ```ruby
 SensitiveDataFilter.config do |config|
   config.enable_types :credit_card # Already defaults to :credit_card if not specified
-  config.on_occurrence do |occurrence|
+  config.on_occurrence do |occurrence| 
     # Report occurrence
-  end
+  end 
 end
 ```
 
 An occurrence object has the following properties:
 
-* origin_ip:      the IP address that originated the request
-* request_method: the HTTP method for the request (GET, POST, etc.)
-* url:            the URL of the request
-* dirty_params:   the parameters sent with the request
-* clean_params:   the parameters sent with the request, with sensitive data clean
-* session:        the session properties for the request
-* matches:        the matched sensitive data
-* matches_count:  the number of matches per data type, e.g. { 'CreditCard' => 1 }
+* origin_ip:       the IP address that originated the request
+* request_method:  the HTTP method for the request (GET, POST, etc.)
+* url:             the URL of the request
+* original_params: the parameters sent with the request
+* filtered_params: the parameters sent with the request, with sensitive data filtered
+* session:         the session properties for the request
+* matches:         the matched sensitive data
+* matches_count:   the number of matches per data type, e.g. { 'CreditCard' => 1 }
 
 It also exposes `to_h` and `to_s` methods for hash and string representation respectively.  
-Please note that these representations omit sensitive data, i.e. `dirty_params` and `matches` are not included.
+Please note that these representations omit sensitive data, i.e. `original_params` and `matches` are not included.
 
 #### Important Note
 
@@ -68,7 +68,7 @@ In Rails you can do something like:
 ```ruby
 filters = Rails.application.config.filter_parameters
 filter  = ActionDispatch::Http::ParameterFilter.new filters
-filter.filter @occurrence.clean_params
+filter.filter @occurrence.filtered_params
 ```
 
 ## Development
@@ -85,3 +85,4 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/sealin
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+

@@ -8,25 +8,25 @@ module SensitiveDataFilter
 
       attr_reader :matches
 
-      def initialize(dirty_env_parser, clean_env_parser, matches)
-        @dirty_env_parser = dirty_env_parser
-        @clean_env_parser = clean_env_parser
-        @matches          = matches
+      def initialize(original_env_parser, filtered_env_parser, matches)
+        @original_env_parser = original_env_parser
+        @filtered_env_parser = filtered_env_parser
+        @matches             = matches
       end
 
       def origin_ip
-        @dirty_env_parser.ip
+        @original_env_parser.ip
       end
 
-      def dirty_params
-        @dirty_env_parser.params
+      def original_params
+        @original_env_parser.params
       end
 
-      def clean_params
-        @clean_env_parser.params
+      def filtered_params
+        @filtered_env_parser.params
       end
 
-      def_delegators :@dirty_env_parser, :request_method, :url, :session
+      def_delegators :@original_env_parser, :request_method, :url, :session
 
       def matches_count
         @matches.map { |type, matches| [type, matches.count] }.to_h
@@ -34,12 +34,12 @@ module SensitiveDataFilter
 
       def to_h
         {
-          origin_ip:      origin_ip,
-          request_method: request_method,
-          url:            url,
-          clean_params:   clean_params,
-          session:        session,
-          matches_count:  matches_count
+          origin_ip:       origin_ip,
+          request_method:  request_method,
+          url:             url,
+          filtered_params: filtered_params,
+          session:         session,
+          matches_count:   matches_count
         }
       end
 
