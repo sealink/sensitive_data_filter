@@ -5,7 +5,7 @@ rvm:
   - 2.0
   - 2.1
   - 2.2
-  - 2.3
+  - 2.3.0 # The version of RVM installed on Travis doesn't yet recognise 2.3 as an alias of 2.3.0
 before_install: gem install bundler -v 1.13.6
 notifications:
   email:
