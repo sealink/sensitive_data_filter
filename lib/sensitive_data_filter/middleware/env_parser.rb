@@ -2,6 +2,9 @@
 module SensitiveDataFilter
   module Middleware
     class EnvParser
+      QUERY_STRING = 'QUERY_STRING'.freeze
+      RACK_INPUT   = 'rack.input'.freeze
+
       extend Forwardable
 
       attr_reader :env
@@ -22,11 +25,11 @@ module SensitiveDataFilter
       end
 
       def query_params=(new_params)
-        @env['QUERY_STRING'] = Rack::Utils.build_query(new_params)
+        @env[QUERY_STRING] = Rack::Utils.build_query(new_params)
       end
 
       def body_params=(new_params)
-        @env['rack.input'] = StringIO.new Rack::Utils.build_query(new_params)
+        @env[RACK_INPUT] = StringIO.new Rack::Utils.build_query(new_params)
       end
 
       def copy
