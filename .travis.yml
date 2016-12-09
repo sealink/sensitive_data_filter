@@ -1,0 +1,14 @@
+sudo: false
+language: ruby
+rvm:
+  - 2.3.0 # The version of RVM installed on Travis doesn't yet recognise 2.3 as an alias of 2.3.0
+matrix:
+  include:
+    - rvm: 2.1
+      gemfile: gemfiles/Gemfile.ruby-2.1.rb
+    - rvm: 2.2
+      gemfile: gemfiles/Gemfile.ruby-2.2.rb
+before_install: gem install bundler -v 1.13.6
+notifications:
+  email:
+    - support@travellink.com.au
