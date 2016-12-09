@@ -7,8 +7,8 @@ require 'sensitive_data_filter/version'
 Gem::Specification.new do |spec|
   spec.name          = 'sensitive_data_filter'
   spec.version       = SensitiveDataFilter::VERSION
-  spec.authors       = ['Alessandro Berardi']
-  spec.email         = ['berardialessandro@gmail.com']
+  spec.authors       = ['Alessandro Berardi', 'SeaLink ']
+  spec.email         = %w(berardialessandro@gmail.com support@travellink.com.au)
 
   spec.summary       = 'Rack Middleware filter for sensitive data'
   spec.description   = 'A Rack Middleware level filter for sensitive data'

@@ -9,7 +9,7 @@ module SensitiveDataFilter
       def initialize(env)
         @original_env_parser = EnvParser.new(env)
         @filtered_env_parser = @original_env_parser.copy
-        @scanner             = ParameterScanner.new(@original_env_parser)
+        @scanner = ParameterScanner.new(@original_env_parser)
         @filtered_env_parser.mask! if @scanner.sensitive_data?
         @occurrence = build_occurrence
       end
