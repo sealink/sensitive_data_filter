@@ -43,9 +43,9 @@ describe SensitiveDataFilter::Mask do
   end
 
   describe '#mask_hash' do
-    let(:hash) { { a: nil, b: 42, c: 'unmasked' } }
+    let(:hash) { { a: nil, b: 42, c: 'unmasked', 'maskable' => 'unmasked' } }
     let(:original_hash) { hash.dup }
-    let(:expected_result) { { a: nil, b: 42, c: masked_value } }
+    let(:expected_result) { { a: nil, b: 42, c: masked_value, masked_value => masked_value } }
     let(:result) { SensitiveDataFilter::Mask.mask_hash hash }
 
     before do

@@ -6,7 +6,7 @@ module SensitiveDataFilter
     class ParameterScanner
       def initialize(env_parser)
         @env_parser = env_parser
-        @params     = @env_parser.query_params.values + @env_parser.body_params.values
+        @params     = @env_parser.query_params.flatten + @env_parser.body_params.flatten
         @scans      = @params.map { |value| SensitiveDataFilter::Scan.new(value) }
       end
 

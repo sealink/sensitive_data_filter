@@ -7,7 +7,7 @@ module SensitiveDataFilter
 
     module_function def mask_hash(hash)
       hash.map.with_object({}) { |(key, value), result|
-        result[key] = mask(value)
+        result[mask(key)] = mask(value)
       }
     end
   end
