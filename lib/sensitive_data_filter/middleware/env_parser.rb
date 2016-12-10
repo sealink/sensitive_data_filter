@@ -21,7 +21,7 @@ module SensitiveDataFilter
       def body_params
         body = @request.body.read
         @request.body.rewind
-        Rack::Utils.parse_query(body)
+        Rack::Utils.parse_query(body) # TODO handle different MIME Types, e.g. JSON
       end
 
       def query_params=(new_params)
