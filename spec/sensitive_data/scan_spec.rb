@@ -5,14 +5,14 @@ require 'spec_helper'
 require 'sensitive_data_filter/scan'
 
 describe SensitiveDataFilter::Scan do
-  let(:enabled_types) { [SensitiveDataFilter::Types::CreditCard] }
+  let(:credit_card_scanner) { double name: 'CreditCard' }
+  let(:enabled_types) { [credit_card_scanner] }
   let(:whitelisted?)  { false }
-
-  let(:credit_card_scanner) { double name: 'CreditCard', scan: matches }
+  let(:credit_card) { '4111 1111 1111 1111' }
 
   before do
-    stub_const 'SensitiveDataFilter::Types::CreditCard', credit_card_scanner
     allow(SensitiveDataFilter).to receive(:enabled_types).and_return enabled_types
+    allow(credit_card_scanner).to receive(:scan) { |value| value.to_s.scan credit_card }
     allow(SensitiveDataFilter).to receive(:whitelisted?).and_return whitelisted?
   end
 
@@ -21,6 +21,14 @@ describe SensitiveDataFilter::Scan do
   context 'when there are matches' do
     let(:value) { 'Credit card 4111 1111 1111 1111' }
     let(:matches) { ['4111 1111 1111 1111'] }
+
+    context 'after scanning' do
+      before do
+        scan.matches?
+      end
+      specify { expect(credit_card_scanner).to have_received(:scan).with(value) }
+    end
+
     specify { expect(scan.matches?).to be true }
     specify { expect(scan.matches).to eq 'CreditCard' => matches }
 
@@ -42,5 +50,36 @@ describe SensitiveDataFilter::Scan do
     let(:matches) { [] }
     specify { expect(scan.matches?).to be false }
     specify { expect(scan.matches).to eq 'CreditCard' => matches }
+  end
+
+  context 'with complex values' do
+    let(:credit_card) { '4111 1111 1111 1111' }
+    let(:matchable_value) { 'Credit card ' + credit_card }
+    let(:matches) { [credit_card] }
+    let(:value) {
+      {
+        a: nil,
+        b: 42,
+        c: matchable_value,
+        d: [3, matchable_value],
+        e: [nil, {}, { 'credit card' => matchable_value }],
+        matchable_value => matchable_value
+      }
+    }
+
+    context 'after scanning' do
+      before do
+        scan.matches?
+      end
+      specify {
+        expect(credit_card_scanner).to have_received(:scan).with('credit card').exactly(1).times
+      }
+      specify {
+        expect(credit_card_scanner).to have_received(:scan).with(matchable_value).exactly(5).times
+      }
+    end
+
+    specify { expect(scan.matches?).to be true }
+    specify { expect(scan.matches).to eq 'CreditCard' => [credit_card] * 5 }
   end
 end
