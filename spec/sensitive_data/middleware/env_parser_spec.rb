@@ -123,13 +123,13 @@ describe SensitiveDataFilter::Middleware::EnvParser do
 
       before do
         stub_const 'SensitiveDataFilter::Mask', mask
-        allow(mask).to receive(:mask_hash).with(query_params).and_return filtered_query_params
-        allow(mask).to receive(:mask_hash).with(body_params).and_return filtered_body_params
+        allow(mask).to receive(:mask).with(query_params).and_return filtered_query_params
+        allow(mask).to receive(:mask).with(body_params).and_return filtered_body_params
         env_parser.mask!
       end
 
-      specify { expect(mask).to have_received(:mask_hash).with query_params }
-      specify { expect(mask).to have_received(:mask_hash).with body_params }
+      specify { expect(mask).to have_received(:mask).with query_params }
+      specify { expect(mask).to have_received(:mask).with body_params }
       specify { expect(env_parser.query_params).to eq filtered_query_params }
       specify { expect(env_parser.body_params).to eq filtered_body_params }
     end

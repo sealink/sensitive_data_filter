@@ -37,8 +37,8 @@ module SensitiveDataFilter
       end
 
       def mask!
-        self.query_params = SensitiveDataFilter::Mask.mask_hash(query_params)
-        self.body_params  = SensitiveDataFilter::Mask.mask_hash(body_params)
+        self.query_params = SensitiveDataFilter::Mask.mask(query_params)
+        self.body_params  = SensitiveDataFilter::Mask.mask(body_params)
       end
 
       def_delegators :@request, :ip, :request_method, :url, :params, :session
