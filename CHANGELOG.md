@@ -10,6 +10,9 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 - Allows defining parameter parsers
 - Scans and masks parameter keys
 
+### Changed
+- Occurrence now exposes query and body params separately
+
 ### Fixed
 - Skips scanning of file uploads
 

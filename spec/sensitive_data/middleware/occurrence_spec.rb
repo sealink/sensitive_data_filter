@@ -8,15 +8,18 @@ describe SensitiveDataFilter::Middleware::Occurrence do
   let(:ip) { '127.0.0.1' }
   let(:request_method) { 'POST' }
   let(:url) { 'https://test.example.com.au/test' }
-  let(:original_params) { { credit_cards: '4111 1111 1111 1111 and 5123 4567 8901 2346' } }
-  let(:filtered_params) { { credit_cards: '[FILTERED] and [FILTERED]' } }
+  let(:original_query_params) { { 'credit_card' => '4111 1111 1111 1111' } }
+  let(:filtered_query_params) { { 'credit_card' => '[FILTERED]' } }
+  let(:original_body_params) { { credit_cards: '4111 1111 1111 1111 and 5123 4567 8901 2346' } }
+  let(:filtered_body_params) { { credit_cards: '[FILTERED] and [FILTERED]' } }
   let(:session) { { 'session_id' => '01ab02cd' } }
   let(:original_env_parser) {
     double(
       ip:             ip,
       request_method: request_method,
       url:            url,
-      params:         original_params,
+      query_params:   original_query_params,
+      body_params:    original_body_params,
       session:        session
     )
   }
@@ -25,7 +28,8 @@ describe SensitiveDataFilter::Middleware::Occurrence do
       ip:             ip,
       request_method: request_method,
       url:            url,
-      params:         filtered_params,
+      query_params:   filtered_query_params,
+      body_params:    filtered_body_params,
       session:        session
     )
   }
@@ -47,19 +51,22 @@ describe SensitiveDataFilter::Middleware::Occurrence do
   specify { expect(occurrence.origin_ip).to eq ip }
   specify { expect(occurrence.request_method).to eq request_method }
   specify { expect(occurrence.url).to eq url }
-  specify { expect(occurrence.original_params).to eq original_params }
-  specify { expect(occurrence.filtered_params).to eq filtered_params }
+  specify { expect(occurrence.original_query_params).to eq original_query_params }
+  specify { expect(occurrence.original_body_params).to eq original_body_params }
+  specify { expect(occurrence.filtered_query_params).to eq filtered_query_params }
+  specify { expect(occurrence.filtered_body_params).to eq filtered_body_params }
   specify { expect(occurrence.session).to eq session }
   specify { expect(occurrence.matches_count).to eq matches_count }
 
   let(:expected_to_h) {
     {
-      origin_ip:       ip,
-      request_method:  request_method,
-      url:             url,
-      filtered_params: filtered_params,
-      session:         session,
-      matches_count:   matches_count
+      origin_ip:             ip,
+      request_method:        request_method,
+      url:                   url,
+      filtered_query_params: filtered_query_params,
+      filtered_body_params:  filtered_body_params,
+      session:               session,
+      matches_count:         matches_count
     }
   }
 
@@ -68,7 +75,8 @@ describe SensitiveDataFilter::Middleware::Occurrence do
     "Origin Ip: 127.0.0.1\n"\
     "Request Method: POST\n"\
     "Url: https://test.example.com.au/test\n"\
-    "Filtered Params: {:credit_cards=>\"[FILTERED] and [FILTERED]\"}\n"\
+    "Filtered Query Params: {\"credit_card\"=>\"[FILTERED]\"}\n"\
+    "Filtered Body Params: {:credit_cards=>\"[FILTERED] and [FILTERED]\"}\n"\
     "Session: {\"session_id\"=>\"01ab02cd\"}\n"\
     'Matches Count: {"CreditCard"=>2}'
   }

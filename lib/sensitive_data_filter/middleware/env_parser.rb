@@ -43,7 +43,7 @@ module SensitiveDataFilter
         self.body_params  = SensitiveDataFilter::Mask.mask(body_params)
       end
 
-      def_delegators :@request, :ip, :request_method, :url, :content_type, :params, :session
+      def_delegators :@request, :ip, :request_method, :url, :content_type, :session
 
       private
 
