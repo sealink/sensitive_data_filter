@@ -44,5 +44,10 @@ module SensitiveDataFilter
     def whitelist_patterns
       @whitelist_patterns ||= []
     end
+
+    def register_parser(content_type, parser, unparser)
+      SensitiveDataFilter::Middleware::ParameterParser
+        .register_parser(content_type, parser, unparser)
+    end
   end
 end

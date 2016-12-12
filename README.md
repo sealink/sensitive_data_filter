@@ -44,6 +44,7 @@ SensitiveDataFilter.config do |config|
     # Report occurrence
   end
   config.whitelist pattern1, pattern2 # Allows specifying patterns to whitelist matches
+  config.register_parser('yaml', -> params { YAML.load params }, -> params { YAML.dump params })
 end
 ```
 
@@ -76,6 +77,16 @@ filter.filter @occurrence.filtered_params
 
 A list of whitelisting patterns can be passed to `config.whitelist`. 
 Any sensitive data match which also matches any of these patterns will be ignored.
+
+#### Parameter Parsing
+
+Parsers for parameters encoded for a specific content type can be defined.
+The arguments for `config.register_parser` are:
+* a pattern to match the content type
+* a parser for the parameters
+* an unparser to convert parameters back to the encoded format
+ 
+The parser and unparser must be objects that respond to `call` and accept the parameters as an argument (e.g. procs or lambdas).
 
 ## Development
 

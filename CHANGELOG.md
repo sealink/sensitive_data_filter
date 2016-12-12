@@ -7,6 +7,7 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 ### Added
 - Support for different content-types
 - Native JSON parameter parsing
+- Allows defining parameter parsers
 - Scans and masks parameter keys
 
 ### Fixed
