@@ -23,9 +23,7 @@ module SensitiveDataFilter
       module_function def valid?(number)
         return false unless number.is_a? String
         return false unless number.match CARD
-        credit_number = number.gsub(SEPARATORS, '')
-        return false unless CreditCardValidations::Luhn.valid?(credit_number)
-        CreditCardValidations::Detector.new(credit_number).brand.present?
+        CreditCardValidations::Detector.new(number.gsub(SEPARATORS, '')).brand.present?
       end
 
       module_function def scan(value)
