@@ -20,6 +20,7 @@ module SensitiveDataFilter
       end
 
       def body_params
+        return {} if file_upload?
         body = @request.body.read
         @request.body.rewind
         @parameter_parser.parse(body)
@@ -43,6 +44,12 @@ module SensitiveDataFilter
       end
 
       def_delegators :@request, :ip, :request_method, :url, :content_type, :params, :session
+
+      private
+
+      def file_upload?
+        @request.media_type == 'multipart/form-data'
+      end
     end
   end
 end

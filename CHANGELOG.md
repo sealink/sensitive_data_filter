@@ -9,6 +9,9 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 - Native JSON parameter parsing
 - Scans and masks parameter keys
 
+### Fixed
+- Skips scanning of file uploads
+
 ## [0.1.0] - 2016-12-09
 ### Added
 - Whitelisting of matches

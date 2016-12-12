@@ -73,6 +73,17 @@ describe SensitiveDataFilter::Middleware::EnvParser do
       specify { expect(rack_input).to eq '{"test":1}' }
       specify { expect(env_parser.body_params).to eq 'test' => 1 }
     end
+
+    context 'when uploading a file' do
+      let(:content_type) { 'multipart/form-data' }
+
+      before do
+        env_parser.body_params
+      end
+
+      specify { expect(null_parameter_parser).not_to have_received(:parse) }
+      specify { expect(env_parser.body_params).to be_empty }
+    end
   end
 
   let(:uri)    { base_uri + '?id=42' }
