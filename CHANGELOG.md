@@ -4,7 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
-### Fixed
+### Added
+- Support for different content-types
+- Native JSON parameter parsing
 - Scans and masks parameter keys
 
 ## [0.1.0] - 2016-12-09

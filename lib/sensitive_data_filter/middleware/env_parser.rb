@@ -12,6 +12,7 @@ module SensitiveDataFilter
       def initialize(env)
         @env = env
         @request = Rack::Request.new(@env)
+        @parameter_parser = ParameterParser.parser_for(@request.media_type)
       end
 
       def query_params
@@ -21,7 +22,7 @@ module SensitiveDataFilter
       def body_params
         body = @request.body.read
         @request.body.rewind
-        Rack::Utils.parse_query(body) # TODO handle different MIME Types, e.g. JSON
+        @parameter_parser.parse(body)
       end
 
       def query_params=(new_params)
@@ -29,7 +30,7 @@ module SensitiveDataFilter
       end
 
       def body_params=(new_params)
-        @env[RACK_INPUT] = StringIO.new Rack::Utils.build_query(new_params)
+        @env[RACK_INPUT] = StringIO.new @parameter_parser.unparse(new_params)
       end
 
       def copy
@@ -41,7 +42,7 @@ module SensitiveDataFilter
         self.body_params  = SensitiveDataFilter::Mask.mask(body_params)
       end
 
-      def_delegators :@request, :ip, :request_method, :url, :params, :session
+      def_delegators :@request, :ip, :request_method, :url, :content_type, :params, :session
     end
   end
 end
