@@ -72,6 +72,11 @@ filter  = ActionDispatch::Http::ParameterFilter.new filters
 filter.filter @occurrence.filtered_params
 ```
 
+#### Whitelisting
+
+A list of whitelisting patterns can be passed to `config.whitelist`. 
+Any sensitive data match which also matches any of these patterns will be ignored.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
