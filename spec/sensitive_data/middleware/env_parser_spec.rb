@@ -107,10 +107,6 @@ describe SensitiveDataFilter::Middleware::EnvParser do
     specify { expect(env_parser.url).to eq uri }
   end
 
-  describe '#params' do
-    specify { expect(env_parser.params).to eq 'id' => '42' }
-  end
-
   describe '#session' do
     before do
       env['rack.session'] = { 'session_id' => '01ab02cd' }

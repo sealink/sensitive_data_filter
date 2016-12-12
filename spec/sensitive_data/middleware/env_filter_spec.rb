@@ -6,13 +6,17 @@ require 'sensitive_data_filter/middleware/env_filter'
 
 describe SensitiveDataFilter::Middleware::EnvFilter do
   let(:env_parser_class) { double }
-  let(:env_parser)       { double 'original_env_parser' }
+  let(:env_parser)       {
+    double 'original_env_parser', query_params: query_params, body_params: body_params
+  }
+  let(:query_params) { double }
+  let(:body_params)  { double }
   let(:env_parser_copy)  { double 'filtered_env_parser', env: filtered_env }
   let(:filtered_env)     { double 'filtered_env' }
 
-  let(:parameter_scanner_class) { double }
-  let(:parameter_scanner)       { double sensitive_data?: sensitive_data?, matches: scan_matches }
-  let(:scan_matches)            { double }
+  let(:scan_class) { double }
+  let(:scan)       { double matches?: matches?, matches: scan_matches }
+  let(:scan_matches) { double }
 
   let(:parameter_masker_class) { double }
   let(:parameter_masker)       { double }
@@ -30,8 +34,9 @@ describe SensitiveDataFilter::Middleware::EnvFilter do
 
     allow(env_parser_copy).to receive(:mask!)
 
-    stub_const 'SensitiveDataFilter::Middleware::ParameterScanner', parameter_scanner_class
-    allow(parameter_scanner_class).to receive(:new).with(env_parser).and_return parameter_scanner
+    stub_const 'SensitiveDataFilter::Scan', scan_class
+    allow(scan_class)
+      .to receive(:new).with([env_parser.query_params, env_parser.body_params]).and_return scan
 
     stub_const 'SensitiveDataFilter::Middleware::Occurrence', occurrence_class
     allow(occurrence_class)
@@ -41,7 +46,7 @@ describe SensitiveDataFilter::Middleware::EnvFilter do
   end
 
   context 'when sensitive data is detected' do
-    let(:sensitive_data?) { true }
+    let(:matches?) { true }
     specify { expect(env_parser_copy).to have_received :mask! }
     specify { expect(env_filter.occurrence?).to be true }
     specify { expect(env_filter.occurrence).to eq occurrence }
@@ -49,7 +54,7 @@ describe SensitiveDataFilter::Middleware::EnvFilter do
   end
 
   context 'when sensitive data is not detected' do
-    let(:sensitive_data?) { false }
+    let(:matches?) { false }
     specify { expect(env_parser_copy).not_to have_received :mask! }
     specify { expect(env_filter.occurrence?).to be false }
     specify { expect(env_filter.occurrence).to be_nil }
