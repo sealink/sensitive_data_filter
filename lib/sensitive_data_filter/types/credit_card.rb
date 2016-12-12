@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'credit_card_validations'
+
 module SensitiveDataFilter
   module Types
     module CreditCard
@@ -21,7 +23,9 @@ module SensitiveDataFilter
       module_function def valid?(number)
         return false unless number.is_a? String
         return false unless number.match CARD
-        Luhn.new(number.gsub(SEPARATORS, '')).valid?
+        credit_number = number.gsub(SEPARATORS, '')
+        return false unless CreditCardValidations::Luhn.valid?(credit_number)
+        CreditCardValidations::Detector.new(credit_number).brand.present?
       end
 
       module_function def scan(value)
@@ -32,40 +36,6 @@ module SensitiveDataFilter
       module_function def mask(value)
         return value unless value.is_a? String
         scan(value).inject(value) { |acc, elem| acc.gsub(elem, FILTERED) }
-      end
-
-      # Adapted from https://github.com/rolfb/luhn-ruby/blob/master/lib/luhn.rb
-      class Luhn
-        def initialize(number)
-          @number = number
-        end
-
-        def valid?
-          numbers = split_digits(@number)
-          numbers.last == checksum(numbers[0..-2].join)
-        end
-
-        private
-
-        def checksum(number)
-          products = luhn_doubled(number)
-          sum      = products.inject(0) { |acc, elem| acc + sum_of(elem) }
-          checksum = 10 - (sum % 10)
-          checksum == 10 ? 0 : checksum
-        end
-
-        def luhn_doubled(number)
-          numbers = split_digits(number).reverse
-          numbers.map.with_index { |n, i| i.even? ? n * 2 : n * 1 }.reverse
-        end
-
-        def sum_of(number)
-          split_digits(number).inject(:+)
-        end
-
-        def split_digits(number)
-          number.to_s.split(//).map(&:to_i)
-        end
       end
     end
   end

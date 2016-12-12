@@ -77,5 +77,11 @@ describe SensitiveDataFilter::Types::CreditCard do
       specify { expect(scan).to be_empty }
       specify { expect(mask).to eq value }
     end
+
+    context 'a luhn valid number but invalid credit card' do
+      let(:value) { '1234-5678-9012-3528' }
+      specify { expect(scan).to be_empty }
+      specify { expect(mask).to eq value }
+    end
   end
 end
