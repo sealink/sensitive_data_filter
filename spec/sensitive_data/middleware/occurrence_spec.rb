@@ -8,6 +8,7 @@ describe SensitiveDataFilter::Middleware::Occurrence do
   let(:ip) { '127.0.0.1' }
   let(:request_method) { 'POST' }
   let(:url) { 'https://test.example.com.au/test' }
+  let(:content_type) { 'application/json' }
   let(:original_query_params) { { 'credit_card' => '4111 1111 1111 1111' } }
   let(:filtered_query_params) { { 'credit_card' => '[FILTERED]' } }
   let(:original_body_params) { { credit_cards: '4111 1111 1111 1111 and 5123 4567 8901 2346' } }
@@ -18,6 +19,7 @@ describe SensitiveDataFilter::Middleware::Occurrence do
       ip:             ip,
       request_method: request_method,
       url:            url,
+      content_type:   content_type,
       query_params:   original_query_params,
       body_params:    original_body_params,
       session:        session
@@ -28,6 +30,7 @@ describe SensitiveDataFilter::Middleware::Occurrence do
       ip:             ip,
       request_method: request_method,
       url:            url,
+      content_type:   content_type,
       query_params:   filtered_query_params,
       body_params:    filtered_body_params,
       session:        session
@@ -63,6 +66,7 @@ describe SensitiveDataFilter::Middleware::Occurrence do
       origin_ip:             ip,
       request_method:        request_method,
       url:                   url,
+      content_type:          content_type,
       filtered_query_params: filtered_query_params,
       filtered_body_params:  filtered_body_params,
       session:               session,
@@ -75,6 +79,7 @@ describe SensitiveDataFilter::Middleware::Occurrence do
     "Origin Ip: 127.0.0.1\n"\
     "Request Method: POST\n"\
     "Url: https://test.example.com.au/test\n"\
+    "Content Type: application/json\n"\
     "Filtered Query Params: {\"credit_card\"=>\"[FILTERED]\"}\n"\
     "Filtered Body Params: {:credit_cards=>\"[FILTERED] and [FILTERED]\"}\n"\
     "Session: {\"session_id\"=>\"01ab02cd\"}\n"\

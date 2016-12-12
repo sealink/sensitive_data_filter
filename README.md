@@ -53,6 +53,7 @@ An occurrence object has the following properties:
 * origin_ip:             the IP address that originated the request
 * request_method:        the HTTP method for the request (GET, POST, etc.)
 * url:                   the URL of the request
+* content_type:          the Content-Type of the request
 * original_query_params: the query parameters sent with the request
 * original_body_params:  the body parameters sent with the request
 * filtered_query_params: the query parameters sent with the request, with sensitive data filtered

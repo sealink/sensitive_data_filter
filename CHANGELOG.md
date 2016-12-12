@@ -5,7 +5,8 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
 ### Added
-- Support for different content-types
+- Occurrence exposes content type
+- Support for different content types
 - Native JSON parameter parsing
 - Allows defining parameter parsers
 - Scans and masks parameter keys
