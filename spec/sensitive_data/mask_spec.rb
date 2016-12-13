@@ -21,6 +21,7 @@ describe SensitiveDataFilter::Mask do
 
   describe '#mask' do
     let(:result) { SensitiveDataFilter::Mask.mask value }
+
     context 'with nil' do
       let(:value) { nil }
       specify { expect(result).to eq nil }
@@ -40,20 +41,34 @@ describe SensitiveDataFilter::Mask do
         specify { expect(result).to eq value }
       end
     end
-  end
 
-  describe '#mask_hash' do
-    let(:hash) { { a: nil, b: 42, c: 'unmasked' } }
-    let(:original_hash) { hash.dup }
-    let(:expected_result) { { a: nil, b: 42, c: masked_value } }
-    let(:result) { SensitiveDataFilter::Mask.mask_hash hash }
+    context 'with complex values' do
+      before do
+        original_value
+        result
+      end
 
-    before do
-      original_hash
-      result
+      context 'with a hash' do
+        let(:value) {
+          { a: nil, b: 42, c: 'unmasked', 'maskable' => 'unmasked', d: [3, 'maskable'] }
+        }
+        let(:original_value) { value.dup }
+        let(:expected_result) {
+          { a: nil, b: 42, c: masked_value, masked_value => masked_value, d: [3, masked_value] }
+        }
+
+        specify { expect(result).to eq expected_result }
+        specify { expect(value).to eq original_value }
+      end
+
+      context 'with an array' do
+        let(:value) { [nil, 42, 'unmasked', { 'maskable' => 'unmasked' }] }
+        let(:original_value) { value.dup }
+        let(:expected_result) { [nil, 42, masked_value, { masked_value => masked_value }] }
+
+        specify { expect(result).to eq expected_result }
+        specify { expect(value).to eq original_value }
+      end
     end
-
-    specify { expect(result).to eq expected_result }
-    specify { expect(hash).to eq original_hash }
   end
 end

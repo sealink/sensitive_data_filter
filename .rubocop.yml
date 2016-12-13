@@ -16,6 +16,9 @@ Style/SignalException:
 Style/SafeNavigation:
   Enabled: false
 
+Style/RedundantFreeze:
+  Enabled: false
+
 Style/FileName:
   Exclude:
     - gemfiles/Gemfile.*.rb

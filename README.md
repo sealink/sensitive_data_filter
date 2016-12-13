@@ -44,24 +44,31 @@ SensitiveDataFilter.config do |config|
     # Report occurrence
   end
   config.whitelist pattern1, pattern2 # Allows specifying patterns to whitelist matches
+  config.register_parser('yaml', -> params { YAML.load params }, -> params { YAML.dump params })
 end
 ```
 
 An occurrence object has the following properties:
 
-* origin_ip:       the IP address that originated the request
-* request_method:  the HTTP method for the request (GET, POST, etc.)
-* url:             the URL of the request
-* original_params: the parameters sent with the request
-* filtered_params: the parameters sent with the request, with sensitive data filtered
-* session:         the session properties for the request
-* matches:         the matched sensitive data
-* matches_count:   the number of matches per data type, e.g. { 'CreditCard' => 1 }
+* origin_ip:             the IP address that originated the request
+* request_method:        the HTTP method for the request (GET, POST, etc.)
+* url:                   the URL of the request
+* content_type:          the Content-Type of the request
+* original_query_params: the query parameters sent with the request
+* original_body_params:  the body parameters sent with the request
+* filtered_query_params: the query parameters sent with the request, with sensitive data filtered
+* filtered_body_params:  the body parameters sent with the request, with sensitive data filtered
+* session:               the session properties for the request
+* matches:               the matched sensitive data
+* matches_count:         the number of matches per data type, e.g. { 'CreditCard' => 1 }
 
 It also exposes `to_h` and `to_s` methods for hash and string representation respectively.  
-Please note that these representations omit sensitive data, i.e. `original_params` and `matches` are not included.
+Please note that these representations omit sensitive data, 
+i.e. `original_query_params`, `original_body_params` and `matches` are not included.
 
-#### Important Note
+#### Important Notes
+
+Body parameters will not be parsed if a parser for the request's content type is not defined.
 
 You might want to filter sensitive parameters (e.g: passwords).
 In Rails you can do something like:
@@ -69,8 +76,28 @@ In Rails you can do something like:
 ```ruby
 filters = Rails.application.config.filter_parameters
 filter  = ActionDispatch::Http::ParameterFilter.new filters
-filter.filter @occurrence.filtered_params
+filtered_query_params = filter.filter @occurrence.filtered_query_params
+filtered_body_params = if @occurrence.filtered_body_params.is_a? Hash
+                         filter.filter @occurrence.filtered_body_params
+                       else
+                         @occurrence.filtered_body_params
+                       end
 ```
+
+#### Whitelisting
+
+A list of whitelisting patterns can be passed to `config.whitelist`. 
+Any sensitive data match which also matches any of these patterns will be ignored.
+
+#### Parameter Parsing
+
+Parsers for parameters encoded for a specific content type can be defined.
+The arguments for `config.register_parser` are:
+* a pattern to match the content type
+* a parser for the parameters
+* an unparser to convert parameters back to the encoded format
+ 
+The parser and unparser must be objects that respond to `call` and accept the parameters as an argument (e.g. procs or lambdas).
 
 ## Development
 

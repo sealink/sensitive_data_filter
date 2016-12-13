@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'rack', '>= 1.4'
   spec.add_dependency 'facets', '~> 3.1'
-  spec.add_dependency 'credit_card_validations', '~> 3.2'  
+  spec.add_dependency 'credit_card_validations', '~> 3.2'
 
   spec.add_development_dependency 'bundler', '~> 1.13'
   spec.add_development_dependency 'rake', '~> 10.0'

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Style/BlockDelimiters
 require 'spec_helper'
 
 require 'sensitive_data_filter/config'
@@ -53,18 +54,35 @@ describe SensitiveDataFilter do
   end
 
   describe '#whitelisted?' do
-    context 'when a whitelist is configured' do
-      before do
-        SensitiveDataFilter.config do |config|
-          config.whitelist 'is allowed', 'is acceptable'
-        end
+    before do
+      SensitiveDataFilter.config do |config|
+        config.whitelist 'is allowed', 'is acceptable'
       end
-
-      let(:allowed_value) { 'this is allowed' }
-      let(:non_allowed_value) { 'this is not allowed' }
-
-      specify { expect(SensitiveDataFilter.whitelisted?(allowed_value)).to be true }
-      specify { expect(SensitiveDataFilter.whitelisted?(non_allowed_value)).to be false }
     end
+
+    let(:allowed_value) { 'this is allowed' }
+    let(:non_allowed_value) { 'this is not allowed' }
+
+    specify { expect(SensitiveDataFilter.whitelisted?(allowed_value)).to be true }
+    specify { expect(SensitiveDataFilter.whitelisted?(non_allowed_value)).to be false }
+  end
+
+  describe '#register_parser' do
+    let(:parameter_parser) { double }
+    let(:parse) { double }
+    let(:unparse) { double }
+
+    before do
+      stub_const 'SensitiveDataFilter::Middleware::ParameterParser', parameter_parser
+      allow(parameter_parser).to receive(:register_parser)
+
+      SensitiveDataFilter.config do |config|
+        config.register_parser 'test', parse, unparse
+      end
+    end
+
+    specify {
+      expect(parameter_parser).to have_received(:register_parser).with('test', parse, unparse)
+    }
   end
 end

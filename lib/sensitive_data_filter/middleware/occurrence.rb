@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'forwardable'
 require 'facets/string/titlecase'
 
 module SensitiveDataFilter
@@ -18,15 +19,23 @@ module SensitiveDataFilter
         @original_env_parser.ip
       end
 
-      def original_params
-        @original_env_parser.params
+      def original_query_params
+        @original_env_parser.query_params
       end
 
-      def filtered_params
-        @filtered_env_parser.params
+      def original_body_params
+        @original_env_parser.body_params
       end
 
-      def_delegators :@original_env_parser, :request_method, :url, :session
+      def filtered_query_params
+        @filtered_env_parser.query_params
+      end
+
+      def filtered_body_params
+        @filtered_env_parser.body_params
+      end
+
+      def_delegators :@original_env_parser, :request_method, :url, :content_type, :session
 
       def matches_count
         @matches.map { |type, matches| [type, matches.count] }.to_h
@@ -34,12 +43,14 @@ module SensitiveDataFilter
 
       def to_h
         {
-          origin_ip:       origin_ip,
-          request_method:  request_method,
-          url:             url,
-          filtered_params: filtered_params,
-          session:         session,
-          matches_count:   matches_count
+          origin_ip:             origin_ip,
+          request_method:        request_method,
+          url:                   url,
+          content_type:          content_type,
+          filtered_query_params: filtered_query_params,
+          filtered_body_params:  filtered_body_params,
+          session:               session,
+          matches_count:         matches_count
         }
       end
 

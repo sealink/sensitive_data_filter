@@ -4,8 +4,8 @@ module SensitiveDataFilter
   end
 end
 
+require 'sensitive_data_filter/middleware/parameter_parser'
 require 'sensitive_data_filter/middleware/env_parser'
-require 'sensitive_data_filter/middleware/parameter_scanner'
 require 'sensitive_data_filter/middleware/occurrence'
 require 'sensitive_data_filter/middleware/env_filter'
 require 'sensitive_data_filter/middleware/filter'
