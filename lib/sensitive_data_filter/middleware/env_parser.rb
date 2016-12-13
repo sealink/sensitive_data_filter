@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'forwardable'
+
 module SensitiveDataFilter
   module Middleware
     class EnvParser
