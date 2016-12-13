@@ -10,6 +10,7 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 - Native JSON parameter parsing
 - Allows defining parameter parsers
 - Scans and masks parameter keys
+- Adds credit card brand validation
 
 ### Changed
 - Occurrence now exposes query and body params separately
