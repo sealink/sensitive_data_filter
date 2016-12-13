@@ -66,7 +66,9 @@ It also exposes `to_h` and `to_s` methods for hash and string representation res
 Please note that these representations omit sensitive data, 
 i.e. `original_query_params`, `original_body_params` and `matches` are not included.
 
-#### Important Note
+#### Important Notes
+
+Body parameters will not be parsed if a parser for the request's content type is not defined.
 
 You might want to filter sensitive parameters (e.g: passwords).
 In Rails you can do something like:
@@ -74,8 +76,12 @@ In Rails you can do something like:
 ```ruby
 filters = Rails.application.config.filter_parameters
 filter  = ActionDispatch::Http::ParameterFilter.new filters
-filter.filter @occurrence.filtered_query_params
-filter.filter @occurrence.filtered_body_params
+filtered_query_params = filter.filter @occurrence.filtered_query_params
+filtered_body_params = if @occurrence.filtered_body_params.is_a? Hash
+                         filter.filter @occurrence.filtered_body_params
+                       else
+                         @occurrence.filtered_body_params
+                       end
 ```
 
 #### Whitelisting
