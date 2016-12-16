@@ -27,10 +27,14 @@ module SensitiveDataFilter
 
       def parse(params)
         @parse.call params
+      rescue
+        params
       end
 
       def unparse(params)
         @unparse.call params
+      rescue
+        params
       end
 
       NULL_PARSER = new('', ->(params) { params }, ->(params) { params })

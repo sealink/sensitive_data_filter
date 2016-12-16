@@ -68,6 +68,23 @@ describe SensitiveDataFilter::Middleware::ParameterParser do
     end
   end
 
+  context 'when parsing raises exceptions' do
+    let(:content_type) { 'application/test' }
+
+    before do
+      parser_class.register_parser(
+        'test',
+        ->(_params) { fail 'Parsing Error' },
+        ->(_params) { fail 'Parsing Error' }
+      )
+    end
+
+    specify { expect{parser.parse('test')}.not_to raise_error }
+    specify { expect(parser.parse('test')).to eq 'test' }
+    specify { expect{parser.unparse('test')}.not_to raise_error }
+    specify { expect(parser.unparse('test')).to eq 'test' }
+  end
+
   context 'when the content type is nil' do
     let(:content_type) { nil }
     specify { expect(parser).to be null_parser }
