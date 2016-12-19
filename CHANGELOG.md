@@ -5,7 +5,7 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
 ### Fixed
-- Match more accurately on the credit card patterns
+- Implements stricter credit cards pattern matching
 
 ## [0.2.1] - 2016-12-19
 ### Changed
