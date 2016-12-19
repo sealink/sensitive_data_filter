@@ -89,7 +89,7 @@ describe SensitiveDataFilter::Types::CreditCard do
     shared_examples_for 'a pattern matcher' do
       context 'valid pattern' do
         it 'should match' do
-          expect(subject.match(valid_card)).to_not be_nil
+          expect(subject.match(valid_card)[0]).to eq valid_card
         end
       end
 
@@ -109,7 +109,7 @@ describe SensitiveDataFilter::Types::CreditCard do
 
     context '14 digit card pattern' do
       subject { SensitiveDataFilter::Types::CreditCard::CARD_14_DIGITS }
-      let(:valid_card) { '1234-123456-1234-1' }
+      let(:valid_card) { '1234-123456-1234' }
       let(:invalid_card) { '1234-12345-123' }
       it_behaves_like 'a pattern matcher'
     end
