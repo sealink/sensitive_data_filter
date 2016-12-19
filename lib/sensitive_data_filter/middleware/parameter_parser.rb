@@ -27,14 +27,10 @@ module SensitiveDataFilter
 
       def parse(params)
         @parse.call params
-      rescue
-        params
       end
 
       def unparse(params)
         @unparse.call params
-      rescue
-        params
       end
 
       NULL_PARSER = new('', ->(params) { params }, ->(params) { params })
@@ -44,9 +40,23 @@ module SensitiveDataFilter
             ->(params) { Rack::Utils.parse_query(params) },
             ->(params) { Rack::Utils.build_query(params) }),
         new('json', # e.g.: 'application/json'
-            ->(params) { JSON.parse(params) },
-            ->(params) { JSON.unparse(params) })
+            ->(params) { JsonParser.new.parse(params) },
+            ->(params) { JsonParser.new.unparse(params) })
       ].freeze
+
+      class JsonParser
+        def parse(params)
+          JSON.parse(params)
+        rescue JSON::ParserError
+          params
+        end
+
+        def unparse(params)
+          JSON.unparse(params)
+        rescue JSON::GeneratorError
+          params
+        end
+      end
     end
   end
 end

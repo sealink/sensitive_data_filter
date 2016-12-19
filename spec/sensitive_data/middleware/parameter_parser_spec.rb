@@ -30,6 +30,15 @@ describe SensitiveDataFilter::Middleware::ParameterParser do
     specify { expect(parser).not_to be null_parser }
     specify { expect(parser.parse(parameters)).to eq 'test' => true }
     specify { expect(parser.unparse('test' => true)).to eq parameters }
+
+    context 'when parsing raises exceptions' do
+      specify { expect{parser.parse('not json')}.not_to raise_error }
+      specify { expect(parser.parse('not json')).to eq 'not json' }
+
+      let(:nan) { 0.0/0 }
+      specify { expect{parser.unparse(nan)}.not_to raise_error }
+      specify { expect(parser.unparse(nan)).to be nan }
+    end
   end
 
   describe 'a custom parser' do
@@ -66,23 +75,6 @@ describe SensitiveDataFilter::Middleware::ParameterParser do
         specify { expect(parser.unparse('test&true')).to eq parameters }
       end
     end
-  end
-
-  context 'when parsing raises exceptions' do
-    let(:content_type) { 'application/test' }
-
-    before do
-      parser_class.register_parser(
-        'test',
-        ->(_params) { fail 'Parsing Error' },
-        ->(_params) { fail 'Parsing Error' }
-      )
-    end
-
-    specify { expect{parser.parse('test')}.not_to raise_error }
-    specify { expect(parser.parse('test')).to eq 'test' }
-    specify { expect{parser.unparse('test')}.not_to raise_error }
-    specify { expect(parser.unparse('test')).to eq 'test' }
   end
 
   context 'when the content type is nil' do

@@ -8,7 +8,7 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 - Updates README for usage with Rails
 
 ### Fixed
-- Handles parsing exceptions gracefully
+- Handles JSON parsing exceptions gracefully
 
 ## [0.2.0] - 2016-12-13
 ### Added
