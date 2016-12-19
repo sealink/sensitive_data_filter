@@ -6,10 +6,10 @@ module SensitiveDataFilter
     module CreditCard
       SEPARATORS     = /[ -]/
       SEPRS          = SEPARATORS.source + '*'
-      CARD_16_DIGITS = /\d{4} #{SEPRS} \d{4} #{SEPRS} \d{4} #{SEPRS} \d{4}/
-      CARD_13_DIGITS = /\d{3} #{SEPRS} \d{3} #{SEPRS} \d{3} #{SEPRS} \d #{SEPRS} \d{3}/
-      CARD_14_DIGITS = /\d{4} #{SEPRS} \d{6} #{SEPRS} \d{4}/
-      CARD_15_DIGITS = /\d{4} #{SEPRS} \d{6} #{SEPRS} \d{5}/
+      CARD_16_DIGITS = /\d{4}#{SEPRS}\d{4}#{SEPRS}\d{4}#{SEPRS}\d{4}/
+      CARD_13_DIGITS = /\d{3}#{SEPRS}\d{3}#{SEPRS}\d{3}#{SEPRS}\d#{SEPRS}\d{3}/
+      CARD_14_DIGITS = /\d{4}#{SEPRS}\d{6}#{SEPRS}\d{4}/
+      CARD_15_DIGITS = /\d{4}#{SEPRS}\d{6}#{SEPRS}\d{5}/
       CARD           = /
                       (?<!\d)(?:
                           #{CARD_16_DIGITS.source}
