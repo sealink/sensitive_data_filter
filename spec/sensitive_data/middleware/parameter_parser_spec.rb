@@ -30,6 +30,15 @@ describe SensitiveDataFilter::Middleware::ParameterParser do
     specify { expect(parser).not_to be null_parser }
     specify { expect(parser.parse(parameters)).to eq 'test' => true }
     specify { expect(parser.unparse('test' => true)).to eq parameters }
+
+    context 'when parsing raises exceptions' do
+      specify { expect{parser.parse('not json')}.not_to raise_error }
+      specify { expect(parser.parse('not json')).to eq 'not json' }
+
+      let(:nan) { 0.0/0 }
+      specify { expect{parser.unparse(nan)}.not_to raise_error }
+      specify { expect(parser.unparse(nan)).to be nan }
+    end
   end
 
   describe 'a custom parser' do

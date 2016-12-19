@@ -40,9 +40,23 @@ module SensitiveDataFilter
             ->(params) { Rack::Utils.parse_query(params) },
             ->(params) { Rack::Utils.build_query(params) }),
         new('json', # e.g.: 'application/json'
-            ->(params) { JSON.parse(params) },
-            ->(params) { JSON.unparse(params) })
+            ->(params) { JsonParser.parse(params) },
+            ->(params) { JsonParser.unparse(params) })
       ].freeze
+
+      class JsonParser
+        def self.parse(params)
+          JSON.parse(params)
+        rescue JSON::ParserError
+          params
+        end
+
+        def self.unparse(params)
+          JSON.unparse(params)
+        rescue JSON::GeneratorError
+          params
+        end
+      end
     end
   end
 end

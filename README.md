@@ -99,7 +99,9 @@ The arguments for `config.register_parser` are:
 * a parser for the parameters
 * an unparser to convert parameters back to the encoded format
  
-The parser and unparser must be objects that respond to `call` and accept the parameters as an argument (e.g. procs or lambdas).
+The parser and unparser must be objects that respond to `call` and accept the parameters as an argument (e.g. procs or lambdas).  
+The parser should handle parsing exceptions gracefully by returning the arguments. 
+This ensures that sensitive data scanning and masking is applied on the raw parameters.
 
 ## Development
 
