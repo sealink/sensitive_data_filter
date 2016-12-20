@@ -15,7 +15,6 @@ module SensitiveDataFilter
                           | #{CARD_13_DIGITS.source}
                           | #{CARD_14_DIGITS.source}
                           | #{CARD_15_DIGITS.source}
-                          |
                         /x
       CATCH_ALL_SEPRS = SEPARATORS.source + '*'
       CATCH_ALL       = /(?:\d#{CATCH_ALL_SEPRS}?){13,16}/
