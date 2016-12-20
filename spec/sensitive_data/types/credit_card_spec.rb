@@ -17,7 +17,8 @@ describe SensitiveDataFilter::Types::CreditCard do
         'Visa'                       => ['4111 1111 1111 1111', '4012 8888 8888 1881',
                                          '422 222 222 2 222'],
         'Dankort (PBS)'              => ['5019 7170 1010 3742'],
-        'Switch/Solo (Paymentech)'   => ['6331 1019 9999 0016']
+        'Switch/Solo (Paymentech)'   => ['6331 1019 9999 0016'],
+        'Unconventionally Typed'     => ['3782  8224  6310  005', '4111111111111111']
       }
     }
     let(:valid_cards) { example_cards.values.flatten }
@@ -54,10 +55,26 @@ describe SensitiveDataFilter::Types::CreditCard do
 
       let(:masked_value) {
         'This text contains [FILTERED] and [FILTERED], '\
-      'which are valid credit card numbers, '\
-      'and 4123 4567 8912 3456, which is not a valid credit card number.'
+        'which are valid credit card numbers, '\
+        'and 4123 4567 8912 3456, which is not a valid credit card number.'
       }
       specify { expect(mask).to eq masked_value }
+    end
+
+    context 'a value that contains valid credit card numbers in a longer numerical pattern' do
+      let(:value) { '1234111 1111 1111 1111234' }
+      specify { expect(scan).to eq ['4111 1111 1111 1111'] }
+    end
+
+    context 'a value that contains repeated valid credit card numbers' do
+      let(:value) { 'cc1 4111 1111 1111 1111 cc2 4111 1111 1111 1111 123' }
+      specify { expect(scan).to eq ['4111 1111 1111 1111'] }
+    end
+
+    context 'a value that contains valid credit cards in a multi line string' do
+      let(:value) { '@TEST\n3782 822463 10005\nEXP: 07/20\n' }
+      specify { expect(scan).to eq ['3782 822463 10005'] }
+      specify { expect(mask).to eq '@TEST\n[FILTERED]\nEXP: 07/20\n' }
     end
 
     context 'a value that does not contain valid credit card numbers' do
