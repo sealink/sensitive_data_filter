@@ -32,11 +32,11 @@ describe SensitiveDataFilter::Middleware::ParameterParser do
     specify { expect(parser.unparse('test' => true)).to eq parameters }
 
     context 'when parsing raises exceptions' do
-      specify { expect{parser.parse('not json')}.not_to raise_error }
+      specify { expect { parser.parse('not json') }.not_to raise_error }
       specify { expect(parser.parse('not json')).to eq 'not json' }
 
-      let(:nan) { 0.0/0 }
-      specify { expect{parser.unparse(nan)}.not_to raise_error }
+      let(:nan) { 0.0 / 0 }
+      specify { expect { parser.unparse(nan) }.not_to raise_error }
       specify { expect(parser.unparse(nan)).to be nan }
     end
   end
