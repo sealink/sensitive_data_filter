@@ -77,6 +77,12 @@ describe SensitiveDataFilter::Types::CreditCard do
       specify { expect(mask).to eq "@TEST\n[FILTERED]\nEXP: 07/20\n" }
     end
 
+    context 'a value that contains a valid tab separated credit card on multiple lines' do
+      let(:value) { "@TEST\n3782\t822463\n10005\nEXP: 07/20\n" }
+      specify { expect(scan).to eq ["3782\t822463\n10005"] }
+      specify { expect(mask).to eq "@TEST\n[FILTERED]\nEXP: 07/20\n" }
+    end
+
     context 'a value that does not contain valid credit card numbers' do
       let(:value) { 'This text does not contain credit card values' }
       specify { expect(scan).to be_empty }
