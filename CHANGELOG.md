@@ -7,6 +7,10 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 ### Fixed
 - Ensures that the url returned by the occurrence is filtered
 
+### Changed
+- Does not match credit cards numbers that are part of longer numbers
+
+
 ## [0.2.2] - 2016-12-21
 ### Fixed
 - Implements stricter credit cards pattern matching
