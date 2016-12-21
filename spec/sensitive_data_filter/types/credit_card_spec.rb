@@ -62,8 +62,13 @@ describe SensitiveDataFilter::Types::CreditCard do
     end
 
     context 'a value that contains valid credit card numbers in a longer numerical pattern' do
-      let(:value) { '1234111 1111 1111 1111234' }
-      specify { expect(scan).to eq ['34111 1111 1111 11', '4111 1111 1111 1111'] }
+      let(:value) { '1234111111111111111234' }
+      specify { expect(scan).to be_empty }
+    end
+
+    context 'a value that contains a valid credit card number separated from other numbers' do
+      let(:value) { '123 4111 1111 1111 1111 234' }
+      specify { expect(scan).to eq ['4111 1111 1111 1111'] }
     end
 
     context 'a value that contains repeated valid credit card numbers' do

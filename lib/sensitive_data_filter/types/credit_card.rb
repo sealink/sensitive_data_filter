@@ -7,7 +7,9 @@ module SensitiveDataFilter
       SEPARATORS = /[\s-]/
       SEPRS      = SEPARATORS.source + '*'
       LENGTHS    = (11..19)
-      CARD       = Regexp.new(LENGTHS.map { |l| /(?=((?:\d#{SEPRS}){#{l - 1}}\d)?)/.source }.join)
+      CARD       = Regexp.new(
+        LENGTHS.map { |length| /(?=((?<!\d)(?:\d#{SEPRS}){#{length - 1}}\d(?!\d))?)/.source }.join
+      )
       FILTERED   = '[FILTERED]'
 
       module_function def valid?(number)
