@@ -35,7 +35,7 @@ module SensitiveDataFilter
         @filtered_env_parser.body_params
       end
 
-      def_delegators :@original_env_parser, :request_method, :url, :content_type, :session
+      def_delegators :@filtered_env_parser, :request_method, :url, :content_type, :session
 
       def matches_count
         @matches.map { |type, matches| [type, matches.count] }.to_h
