@@ -83,6 +83,12 @@ describe SensitiveDataFilter::Types::CreditCard do
       specify { expect(mask).to eq "@TEST\n[FILTERED]\nEXP: 07/20\n" }
     end
 
+    context 'a value that is a luhn but not a credit card' do
+      let(:value) { '1230-2675-9183-4267' }
+      specify { expect(scan).to be_empty }
+      specify { expect(mask).to eq value }
+    end
+
     context 'a value that does not contain valid credit card numbers' do
       let(:value) { 'This text does not contain credit card values' }
       specify { expect(scan).to be_empty }
