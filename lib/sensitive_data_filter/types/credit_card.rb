@@ -10,7 +10,7 @@ module SensitiveDataFilter
       CARD       = Regexp.new(
         LENGTHS.map { |length| /(?=((?<!\d)(?:\d#{SEPRS}){#{length - 1}}\d(?!\d))?)/.source }.join
       )
-      FILTERED   = '[FILTERED]'
+      FILTERED = '[FILTERED]'
 
       module_function def valid?(number)
         return false unless number.is_a? String
