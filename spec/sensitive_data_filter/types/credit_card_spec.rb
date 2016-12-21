@@ -71,10 +71,10 @@ describe SensitiveDataFilter::Types::CreditCard do
       specify { expect(scan).to eq ['4111 1111 1111 1111'] }
     end
 
-    context 'a value that contains valid credit cards in a multi line string' do
-      let(:value) { '@TEST\n3782 822463 10005\nEXP: 07/20\n' }
+    context 'a value that contains a valid credit card in a multi line string' do
+      let(:value) { "@TEST\n3782 822463 10005\nEXP: 07/20\n" }
       specify { expect(scan).to eq ['3782 822463 10005'] }
-      specify { expect(mask).to eq '@TEST\n[FILTERED]\nEXP: 07/20\n' }
+      specify { expect(mask).to eq "@TEST\n[FILTERED]\nEXP: 07/20\n" }
     end
 
     context 'a value that does not contain valid credit card numbers' do
