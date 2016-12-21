@@ -7,6 +7,7 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 ### Fixed
 - Implements stricter credit cards pattern matching
 - Matches unconventionally formatted credit cards
+- Scans every sub string for credit cards
 
 ## [0.2.1] - 2016-12-19
 ### Changed

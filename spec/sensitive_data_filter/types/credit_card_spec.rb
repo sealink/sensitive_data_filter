@@ -63,12 +63,12 @@ describe SensitiveDataFilter::Types::CreditCard do
 
     context 'a value that contains valid credit card numbers in a longer numerical pattern' do
       let(:value) { '1234111 1111 1111 1111234' }
-      specify { expect(scan).to eq ['4111 1111 1111 1111'] }
+      specify { expect(scan).to eq ['34111 1111 1111 11', '4111 1111 1111 1111'] }
     end
 
     context 'a value that contains repeated valid credit card numbers' do
       let(:value) { 'cc1 4111 1111 1111 1111 cc2 4111 1111 1111 1111 123' }
-      specify { expect(scan).to eq ['4111 1111 1111 1111'] }
+      specify { expect(scan).to eq ['4111 1111 1111 1111', '4111 1111 1111 1111'] }
     end
 
     context 'a value that contains a valid credit card in a multi line string' do
@@ -105,56 +105,6 @@ describe SensitiveDataFilter::Types::CreditCard do
       let(:value) { nil }
       specify { expect(scan).to be_empty }
       specify { expect(mask).to eq value }
-    end
-
-    context 'a value that is a luhn but not a credit card' do
-      let(:value) { '1234-5678-9012-3528' }
-      specify { expect(scan).to be_empty }
-      specify { expect(mask).to eq value }
-    end
-  end
-
-  describe 'pattern matching' do
-    shared_examples_for 'a pattern matcher' do
-      context 'valid pattern' do
-        it 'should match' do
-          expect(subject.match(valid_match)[0]).to eq valid_match
-        end
-      end
-
-      context 'invalid pattern' do
-        it 'should not match' do
-          expect(subject.match(invalid_match)).to be_nil
-        end
-      end
-    end
-
-    context '13 digit card pattern' do
-      subject { SensitiveDataFilter::Types::CreditCard::CARD_13_DIGITS }
-      let(:valid_match) { '123-123-123-1-123' }
-      let(:invalid_match) { '1234-123-123-1-35' }
-      it_behaves_like 'a pattern matcher'
-    end
-
-    context '14 digit card pattern' do
-      subject { SensitiveDataFilter::Types::CreditCard::CARD_14_DIGITS }
-      let(:valid_match) { '1234-123456-1234' }
-      let(:invalid_match) { '1234-12345-123' }
-      it_behaves_like 'a pattern matcher'
-    end
-
-    context '15 digit card' do
-      subject { SensitiveDataFilter::Types::CreditCard::CARD_15_DIGITS }
-      let(:valid_match) { '1234-123456-12345' }
-      let(:invalid_match) { '123-1234567-12345' }
-      it_behaves_like 'a pattern matcher'
-    end
-
-    context '16 digit card pattern' do
-      subject(:card_16_digits) { SensitiveDataFilter::Types::CreditCard::CARD_16_DIGITS }
-      let(:valid_match) { '1234-5678-9012-3528' }
-      let(:invalid_match) { '1234-15678-012-3528' }
-      it_behaves_like 'a pattern matcher'
     end
   end
 end
