@@ -66,8 +66,38 @@ describe SensitiveDataFilter::Types::CreditCard do
       specify { expect(scan).to be_empty }
     end
 
+    context 'a value that contains valid credit card numbers preceded by numbers' do
+      let(:value) { '1234111111111111111' }
+      specify { expect(scan).to be_empty }
+    end
+
+    context 'a value that contains valid credit card numbers followed by numbers' do
+      let(:value) { '4111111111111111321' }
+      specify { expect(scan).to be_empty }
+    end
+
     context 'a value that contains a valid credit card number separated from other numbers' do
       let(:value) { '123 4111 1111 1111 1111 234' }
+      specify { expect(scan).to eq ['4111 1111 1111 1111'] }
+    end
+
+    context 'a value that contains valid credit card numbers between letters' do
+      let(:value) { 'abc4111111111111111dfg' }
+      specify { expect(scan).to be_empty }
+    end
+
+    context 'a value that contains valid credit card numbers preceded by letters' do
+      let(:value) { 'abc4111111111111111' }
+      specify { expect(scan).to be_empty }
+    end
+
+    context 'a value that contains valid credit card numbers followed by letters' do
+      let(:value) { '4111111111111111abc' }
+      specify { expect(scan).to be_empty }
+    end
+
+    context 'a value that contains a valid credit card number separated from other characters' do
+      let(:value) { 'abc 4111 1111 1111 1111 dfg' }
       specify { expect(scan).to eq ['4111 1111 1111 1111'] }
     end
 
