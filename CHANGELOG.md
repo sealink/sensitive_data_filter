@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
+## [Unreleased]
+### Changed
+- Updates README for usage with Rails middleware stack
+
 ## [0.2.4] - 2016-12-22
 ### Changed
 - Does not match credit cards numbers that are part of alphanumerical strings

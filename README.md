@@ -28,13 +28,13 @@ Or install it yourself as:
 
 ### Enable the middleware
 
-Insert the middleware in the stack before any parameter parsing is performed
+Insert the middleware at the top of the stack
 
 E.g. for Rails, add the following in application.rb
 
 ```ruby
 # --- Sensitive Data Filtering ---
-config.middleware.insert_before 'ActionDispatch::ParamsParser', SensitiveDataFilter::Middleware::Filter
+config.middleware.insert_before 0, SensitiveDataFilter::Middleware::Filter
 ```
 
 ### Configuration
