@@ -8,7 +8,7 @@ module SensitiveDataFilter
       SEPRS      = SEPARATORS.source + '*'
       LENGTHS    = (11..19)
       CARD       = Regexp.new(
-        LENGTHS.map { |length| /(?=((?<!\d)(?:\d#{SEPRS}){#{length - 1}}\d(?!\d))?)/.source }.join
+        LENGTHS.map { |length| /(?=(\b(?:\d#{SEPRS}){#{length - 1}}\d\b)?)/.source }.join
       )
       FILTERED = '[FILTERED]'
 
