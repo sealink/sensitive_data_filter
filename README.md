@@ -63,6 +63,8 @@ An occurrence object has the following properties:
 * session:               the session properties for the request
 * matches:               the matched sensitive data
 * matches_count:         the number of matches per data type, e.g. { 'CreditCard' => 1 }
+* original_env:          the original unfiltered Rack env
+* filtered_env:          the filtered Rack env which will be passed down the middleware stack
 
 It also exposes `to_h` and `to_s` methods for hash and string representation respectively.  
 Please note that these representations omit sensitive data, 
