@@ -12,7 +12,13 @@ module SensitiveDataFilter
     end
 
     module_function def mask_hash(hash)
-      hash.map { |key, value| [mask(key), mask(value)] }.to_h
+      hash.map { |key, value| mask_key_value(key, value) }.to_h
+    end
+
+    module_function def mask_key_value(key, value)
+      masked_key = mask(key)
+      return [masked_key, value] if SensitiveDataFilter.whitelisted_key? key
+      [masked_key, mask(value)]
     end
   end
 end

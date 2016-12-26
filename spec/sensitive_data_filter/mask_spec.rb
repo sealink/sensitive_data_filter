@@ -17,6 +17,7 @@ describe SensitiveDataFilter::Mask do
     }
 
     allow(SensitiveDataFilter).to receive(:enabled_types).and_return enabled_types
+    allow(SensitiveDataFilter).to receive(:whitelisted_key?) { |key| key.match /phone|mobile/}
   end
 
   describe '#mask' do
@@ -59,6 +60,18 @@ describe SensitiveDataFilter::Mask do
 
         specify { expect(result).to eq expected_result }
         specify { expect(value).to eq original_value }
+
+        context 'when keys are whitelisted' do
+          let(:value) {
+            { credit_card: 'maskable', phone: 'maskable' }
+          }
+
+          let(:expected_result) {
+            { credit_card: masked_value, phone: 'maskable' }
+          }
+
+          specify { expect(result).to eq expected_result }
+        end
       end
 
       context 'with an array' do

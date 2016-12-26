@@ -17,7 +17,13 @@ module SensitiveDataFilter
     end
 
     def self.scan_hash(hash)
-      hash.map { |key, value| scan(key).collate(scan(value)) }.inject(:collate) || {}
+      hash.map { |key, value| scan_key_value(key, value) }.inject(:collate) || {}
+    end
+
+    def self.scan_key_value(key, value)
+      key_scan = scan(key)
+      return key_scan if SensitiveDataFilter.whitelisted_key? key
+      key_scan.collate(scan(value))
     end
 
     def self.whitelist(matches)

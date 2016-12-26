@@ -46,6 +46,7 @@ SensitiveDataFilter.config do |config|
     # Report occurrence
   end
   config.whitelist pattern1, pattern2 # Allows specifying patterns to whitelist matches
+  config.whitelist_key key_pattern1, key_pattern2 # Allows specifying patterns to whitelist hash values based on their keys
   config.register_parser('yaml', -> params { YAML.load params }, -> params { YAML.dump params })
 end
 ```
@@ -90,6 +91,9 @@ filtered_body_params = if @occurrence.filtered_body_params.is_a? Hash
 
 A list of whitelisting patterns can be passed to `config.whitelist`. 
 Any sensitive data match which also matches any of these patterns will be ignored.
+
+A list of whitelisting patterns can be passed to `config.whitelist_key`. 
+When scanning and matching hashes, any value whose key matches any of these patterns will be ignored.
 
 #### Parameter Parsing
 

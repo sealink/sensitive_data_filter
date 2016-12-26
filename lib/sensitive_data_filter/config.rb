@@ -20,6 +20,10 @@ module SensitiveDataFilter
     config.whitelist_patterns.any? { |pattern| value.match pattern }
   end
 
+  def self.whitelisted_key?(key)
+    config.whitelist_key_patterns.any? { |pattern| key.match pattern }
+  end
+
   class Config
     DEFAULT_TYPES = %i(credit_card).freeze
 
@@ -43,6 +47,14 @@ module SensitiveDataFilter
 
     def whitelist_patterns
       @whitelist_patterns ||= []
+    end
+
+    def whitelist_key(*patterns)
+      @whitelist_key_patterns = patterns
+    end
+
+    def whitelist_key_patterns
+      @whitelist_key_patterns ||= []
     end
 
     def register_parser(content_type, parser, unparser)
