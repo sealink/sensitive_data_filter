@@ -7,20 +7,23 @@ require 'sensitive_data_filter/scan'
 describe SensitiveDataFilter::Scan do
   let(:credit_card_scanner) { double name: 'CreditCard' }
   let(:enabled_types) { [credit_card_scanner] }
-  let(:whitelisted?)  { false }
-  let(:credit_card) { '4111 1111 1111 1111' }
+  let(:whitelisted?) { false }
+  let(:pattern) { /4111[\s-]*1111[\s-]*1111[\s-]*1111|5555[\s-]*5555[\s-]*5555[\s-]*4444/ }
+  let(:visa) { '4111 1111 1111 1111' }
+  let(:mastercard) { '5555 5555 5555 4444' }
 
   before do
     allow(SensitiveDataFilter).to receive(:enabled_types).and_return enabled_types
-    allow(credit_card_scanner).to receive(:scan) { |value| value.to_s.scan credit_card }
+    allow(credit_card_scanner).to receive(:scan) { |value| value.to_s.scan pattern }
     allow(SensitiveDataFilter).to receive(:whitelisted?).and_return whitelisted?
+    allow(SensitiveDataFilter).to receive(:whitelisted_key?) { |key| key.match /phone|mobile/}
   end
 
   let(:scan) { SensitiveDataFilter::Scan.new(value) }
 
   context 'when there are matches' do
-    let(:value) { 'Credit card 4111 1111 1111 1111' }
-    let(:matches) { ['4111 1111 1111 1111'] }
+    let(:value) { "Credit card #{visa}" }
+    let(:matches) { [visa] }
 
     context 'after scanning' do
       before do
@@ -53,9 +56,8 @@ describe SensitiveDataFilter::Scan do
   end
 
   context 'with complex values' do
-    let(:credit_card) { '4111 1111 1111 1111' }
-    let(:matchable_value) { 'Credit card ' + credit_card }
-    let(:matches) { [credit_card] }
+    let(:matchable_value) { 'Credit card ' + visa }
+    let(:matches) { [visa] }
     let(:value) {
       {
         a: nil,
@@ -80,6 +82,15 @@ describe SensitiveDataFilter::Scan do
     end
 
     specify { expect(scan.matches?).to be true }
-    specify { expect(scan.matches).to eq 'CreditCard' => [credit_card] * 5 }
+    specify { expect(scan.matches).to eq 'CreditCard' => [visa] * 5 }
+  end
+
+  context 'when keys are whitelisted' do
+    let(:value) {
+      { credit_card: mastercard, phone: "+#{visa}" }
+    }
+
+    specify { expect(scan.matches?).to be true }
+    specify { expect(scan.matches).to eq 'CreditCard' => [mastercard] }
   end
 end

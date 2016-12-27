@@ -67,6 +67,20 @@ describe SensitiveDataFilter do
     specify { expect(SensitiveDataFilter.whitelisted?(non_allowed_value)).to be false }
   end
 
+  describe '#whitelisted_key?' do
+    before do
+      SensitiveDataFilter.config do |config|
+        config.whitelist_key 'is allowed', 'is acceptable'
+      end
+    end
+
+    let(:allowed_key) { 'this is allowed' }
+    let(:non_allowed_key) { 'this is not allowed' }
+
+    specify { expect(SensitiveDataFilter.whitelisted_key?(allowed_key)).to be true }
+    specify { expect(SensitiveDataFilter.whitelisted_key?(non_allowed_key)).to be false }
+  end
+
   describe '#register_parser' do
     let(:parameter_parser) { double }
     let(:parse) { double }

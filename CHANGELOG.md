@@ -5,6 +5,7 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
 ### Changed
+- Allows whitelisting hash values based on the key
 - Updates README for usage with Rails middleware stack
 
 ### Added
