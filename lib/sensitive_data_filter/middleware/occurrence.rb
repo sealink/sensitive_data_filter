@@ -35,6 +35,14 @@ module SensitiveDataFilter
         @filtered_env_parser.body_params
       end
 
+      def original_env
+        @original_env_parser.env
+      end
+
+      def filtered_env
+        @filtered_env_parser.env
+      end
+
       def_delegators :@filtered_env_parser, :request_method, :url, :content_type, :session
 
       def matches_count

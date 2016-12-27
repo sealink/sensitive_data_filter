@@ -15,6 +15,8 @@ describe SensitiveDataFilter::Middleware::Occurrence do
   let(:original_body_params) { { credit_cards: '4111 1111 1111 1111 and 5123 4567 8901 2346' } }
   let(:filtered_body_params) { { credit_cards: '[FILTERED] and [FILTERED]' } }
   let(:session) { { 'session_id' => '01ab02cd' } }
+  let(:original_env) { double }
+  let(:filtered_env) { double }
   let(:original_env_parser) {
     double(
       ip:             ip,
@@ -23,7 +25,8 @@ describe SensitiveDataFilter::Middleware::Occurrence do
       content_type:   content_type,
       query_params:   original_query_params,
       body_params:    original_body_params,
-      session:        session
+      session:        session,
+      env:            original_env
     )
   }
   let(:filtered_env_parser) {
@@ -34,7 +37,8 @@ describe SensitiveDataFilter::Middleware::Occurrence do
       content_type:   content_type,
       query_params:   filtered_query_params,
       body_params:    filtered_body_params,
-      session:        session
+      session:        session,
+      env:            filtered_env
     )
   }
   let(:matches) {
@@ -61,6 +65,8 @@ describe SensitiveDataFilter::Middleware::Occurrence do
   specify { expect(occurrence.filtered_body_params).to eq filtered_body_params }
   specify { expect(occurrence.session).to eq session }
   specify { expect(occurrence.matches_count).to eq matches_count }
+  specify { expect(occurrence.original_env).to eq original_env }
+  specify { expect(occurrence.filtered_env).to eq filtered_env }
 
   let(:expected_to_h) {
     {
