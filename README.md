@@ -28,14 +28,29 @@ Or install it yourself as:
 
 ### Enable the middleware
 
-Insert the middleware at the top of the stack
+Insert the middleware in the stack before any parameter parsing is performed.
 
 E.g. for Rails, add the following in application.rb
 
 ```ruby
 # --- Sensitive Data Filtering ---
+config.middleware.insert_before 'ActionDispatch::ParamsParser', SensitiveDataFilter::Middleware::Filter
+```
+
+To ensure that no sensitive data is accessed at any level of the stack, insert the middleware at the top of the stack. 
+
+E.g.
+
+```ruby
+# --- Sensitive Data Filtering ---
 config.middleware.insert_before 0, SensitiveDataFilter::Middleware::Filter
 ```
+
+#### Important note for Rails
+
+Rails logs the URI of the request in ``Rails::Rack::Logger``. At this point of the stack, Rails generally has not yet set the session in the env.
+If you insert the sensitive data filtering middleware before this middleware you will prevent sensitive data from appearing in the logs, 
+but you will not have access to the session via the occurrence or the env in the occurrence handling block.
 
 ### Configuration
 
