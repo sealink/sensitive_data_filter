@@ -16,7 +16,7 @@ describe SensitiveDataFilter::Scan do
     allow(SensitiveDataFilter).to receive(:enabled_types).and_return enabled_types
     allow(credit_card_scanner).to receive(:scan) { |value| value.to_s.scan pattern }
     allow(SensitiveDataFilter).to receive(:whitelisted?).and_return whitelisted?
-    allow(SensitiveDataFilter).to receive(:whitelisted_key?) { |key| key.match /phone|mobile/}
+    allow(SensitiveDataFilter).to receive(:whitelisted_key?) { |key| key.match(/phone|mobile/) }
   end
 
   let(:scan) { SensitiveDataFilter::Scan.new(value) }

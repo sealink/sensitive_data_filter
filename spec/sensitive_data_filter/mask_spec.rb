@@ -17,7 +17,7 @@ describe SensitiveDataFilter::Mask do
     }
 
     allow(SensitiveDataFilter).to receive(:enabled_types).and_return enabled_types
-    allow(SensitiveDataFilter).to receive(:whitelisted_key?) { |key| key.match /phone|mobile/}
+    allow(SensitiveDataFilter).to receive(:whitelisted_key?) { |key| key.match(/phone|mobile/) }
   end
 
   describe '#mask' do
