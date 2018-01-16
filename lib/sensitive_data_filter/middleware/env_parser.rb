@@ -36,13 +36,10 @@ module SensitiveDataFilter
         @env[RACK_INPUT] = StringIO.new @parameter_parser.unparse(new_params)
       end
 
-      def copy
-        self.class.new(@env.clone)
-      end
-
-      def mask!
-        self.query_params = SensitiveDataFilter::Mask.mask(query_params)
-        self.body_params  = SensitiveDataFilter::Mask.mask(body_params)
+      def mutate(mutation)
+        SensitiveDataFilter::Middleware::FILTERABLE.each do |filterable|
+          self.send("#{filterable}=", mutation.send(filterable))
+        end
       end
 
       def_delegators :@request, :ip, :request_method, :url, :content_type, :session

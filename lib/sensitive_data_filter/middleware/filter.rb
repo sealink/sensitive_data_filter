@@ -7,16 +7,20 @@ module SensitiveDataFilter
       end
 
       def call(env)
-        env_filter = EnvFilter.new env
-        handle_occurrence env_filter
-        @app.call env_filter.filtered_env
+        original_env = EnvParser.new(env)
+        changeset, scan = Detect.new(original_env).call
+        unless changeset.nil?
+          handle_occurrence(original_env, changeset, scan)
+          original_env.mutate(changeset)
+        end
+        @app.call(env)
       end
 
       private
 
-      def handle_occurrence(env_filter)
-        return unless env_filter.occurrence?
-        SensitiveDataFilter.handle_occurrence env_filter.occurrence
+      def handle_occurrence(filter, changeset, scan)
+        occurence = Occurrence.new(filter, changeset, scan.matches)
+        SensitiveDataFilter.handle_occurrence(occurence)
       end
     end
   end

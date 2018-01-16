@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # rubocop:disable Style/BlockDelimiters
 require 'spec_helper'
-
+require 'rack/mock'
 require 'sensitive_data_filter/middleware/occurrence'
 
 describe SensitiveDataFilter::Middleware::Occurrence do
@@ -16,7 +16,7 @@ describe SensitiveDataFilter::Middleware::Occurrence do
   let(:filtered_body_params) { { credit_cards: '[FILTERED] and [FILTERED]' } }
   let(:session) { { 'session_id' => '01ab02cd' } }
   let(:original_env) { double }
-  let(:filtered_env) { double }
+  let(:changeset) { double }
   let(:original_env_parser) {
     double(
       ip:             ip,
@@ -29,16 +29,10 @@ describe SensitiveDataFilter::Middleware::Occurrence do
       env:            original_env
     )
   }
-  let(:filtered_env_parser) {
+  let(:changeset) {
     double(
-      ip:             ip,
-      request_method: request_method,
-      url:            filtered_url,
-      content_type:   content_type,
       query_params:   filtered_query_params,
-      body_params:    filtered_body_params,
-      session:        session,
-      env:            filtered_env
+      body_params:    filtered_body_params
     )
   }
   let(:matches) {
@@ -47,10 +41,17 @@ describe SensitiveDataFilter::Middleware::Occurrence do
     }
   }
   let(:matches_count) { { 'CreditCard' => 2 } }
+
+  let(:mask_class) { double }
+  before do
+    stub_const('SensitiveDataFilter::Mask', mask_class)
+    allow(mask_class).to receive(:mask).and_return(filtered_url)
+  end
+
   subject(:occurrence) {
     SensitiveDataFilter::Middleware::Occurrence.new(
       original_env_parser,
-      filtered_env_parser,
+      changeset,
       matches
     )
   }
@@ -66,7 +67,7 @@ describe SensitiveDataFilter::Middleware::Occurrence do
   specify { expect(occurrence.session).to eq session }
   specify { expect(occurrence.matches_count).to eq matches_count }
   specify { expect(occurrence.original_env).to eq original_env }
-  specify { expect(occurrence.filtered_env).to eq filtered_env }
+  specify { expect(occurrence.changeset).to eq changeset }
 
   let(:expected_to_h) {
     {
