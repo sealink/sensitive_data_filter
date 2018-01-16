@@ -117,24 +117,30 @@ describe SensitiveDataFilter::Middleware::EnvParser do
   describe '#mutate!' do
     let(:query_params) { { 'sensitive_query' => 'sensitive_data' } }
     let(:body_params) { { 'sensitive_body' => 'sensitive_data' } }
+    let(:request_params) { { 'sensitive_request' => 'sensitive_request' } }
 
     before do
       env_parser.query_params = { sensitive_query: 'sensitive_data' }
       env_parser.body_params  = { sensitive_body: 'sensitive_data' }
+      env_parser.request_params  = { sensitive_request: 'sensitive_request' }
     end
 
     context 'before mutation' do
       specify { expect(env_parser.query_params).to eq 'sensitive_query' => 'sensitive_data' }
       specify { expect(env_parser.body_params).to eq 'sensitive_body' => 'sensitive_data' }
+      specify { expect(env_parser.request_params).to eq({ sensitive_request: 'sensitive_request' }) }
     end
 
     context 'after mutation' do
       let(:filtered_query_params) { { 'sensitive_query' => '[FILTERED]' } }
       let(:filtered_body_params) { { 'sensitive_body' => '[FILTERED]' } }
+      let(:filtered_request_params) { { 'sensitive_request' => '[FILTERED]' } }
+
       let(:changeset) {
         double(
           query_params: filtered_query_params,
-          body_params: filtered_body_params
+          body_params: filtered_body_params,
+          request_params: filtered_request_params
         )
       }
 
@@ -144,6 +150,7 @@ describe SensitiveDataFilter::Middleware::EnvParser do
 
       specify { expect(env_parser.query_params).to eq filtered_query_params }
       specify { expect(env_parser.body_params).to eq filtered_body_params }
+      specify { expect(env_parser.request_params).to eq filtered_request_params }
     end
   end
 end

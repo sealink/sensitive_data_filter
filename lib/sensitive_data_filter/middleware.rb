@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module SensitiveDataFilter
   module Middleware
-    FILTERABLE = %i(query_params body_params).freeze
+    FILTERABLE = %i(query_params body_params request_params).freeze
   end
 end
 

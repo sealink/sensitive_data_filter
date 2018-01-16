@@ -14,6 +14,7 @@ describe SensitiveDataFilter::Middleware::Occurrence do
   let(:filtered_query_params) { { 'credit_card' => '[FILTERED]' } }
   let(:original_body_params) { { credit_cards: '4111 1111 1111 1111 and 5123 4567 8901 2346' } }
   let(:filtered_body_params) { { credit_cards: '[FILTERED] and [FILTERED]' } }
+  let(:filtered_request_params) { { 'credit_card' => '[FILTERED]' } }
   let(:session) { { 'session_id' => '01ab02cd' } }
   let(:original_env) { double }
   let(:changeset) { double }
