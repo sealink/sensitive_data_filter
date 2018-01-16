@@ -6,6 +6,7 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 ## Unreleased
 ### Changed
 - [TT-3520] No longer clone the "env" middleware variable
+- [TT-3521] filter action dispatch parameter fields
 
 ## [0.3.0] - 2016-12-28
 ### Changed
