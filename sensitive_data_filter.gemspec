@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'rack', '>= 1.4'
   spec.add_dependency 'facets', '~> 3.1'
-  spec.add_dependency 'credit_card_validations', '~> 3.2'
+  spec.add_dependency 'credit_card_validations', '~> 3.4'
 
   spec.add_development_dependency 'bundler', '~> 1.13'
   spec.add_development_dependency 'rake', '~> 10.0'
@@ -33,6 +33,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'coverage-kit', '~> 0.1'
   spec.add_development_dependency 'simplecov-rcov', '~> 0.2'
   spec.add_development_dependency 'coveralls', '~> 0.8'
-  spec.add_development_dependency 'rubocop', '~> 0.46'
+  spec.add_development_dependency 'rubocop', '~> 0.52'
   spec.add_development_dependency 'travis', '~> 1.8'
 end
