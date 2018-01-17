@@ -114,54 +114,43 @@ describe SensitiveDataFilter::Middleware::EnvParser do
     specify { expect(env_parser.session).to eq 'session_id' => '01ab02cd' }
   end
 
-  describe '#copy' do
-    let(:masked_env_parser) { env_parser.copy }
-
-    before do
-      masked_env_parser.query_params = { id: 2 }
-      masked_env_parser.body_params = { test: 2 }
-
-      env_parser.query_params = { id: 1 }
-      env_parser.body_params = { test: 1 }
-    end
-
-    specify { expect(env_parser.query_params).to eq 'id' => '1' }
-    specify { expect(env_parser.body_params).to eq 'test' => 1 }
-
-    specify { expect(masked_env_parser.query_params).to eq 'id' => '2' }
-    specify { expect(masked_env_parser.body_params).to eq 'test' => 2 }
-  end
-
-  describe '#mask!' do
+  describe '#mutate!' do
     let(:query_params) { { 'sensitive_query' => 'sensitive_data' } }
     let(:body_params) { { 'sensitive_body' => 'sensitive_data' } }
+    let(:request_params) { { 'sensitive_request' => 'sensitive_request' } }
 
     before do
       env_parser.query_params = { sensitive_query: 'sensitive_data' }
       env_parser.body_params  = { sensitive_body: 'sensitive_data' }
+      env_parser.request_params  = { sensitive_request: 'sensitive_request' }
     end
 
-    context 'before masking' do
+    context 'before mutation' do
       specify { expect(env_parser.query_params).to eq 'sensitive_query' => 'sensitive_data' }
       specify { expect(env_parser.body_params).to eq 'sensitive_body' => 'sensitive_data' }
+      specify { expect(env_parser.request_params).to eq({ sensitive_request: 'sensitive_request' }) }
     end
 
-    context 'after masking' do
-      let(:mask) { double }
+    context 'after mutation' do
       let(:filtered_query_params) { { 'sensitive_query' => '[FILTERED]' } }
       let(:filtered_body_params) { { 'sensitive_body' => '[FILTERED]' } }
+      let(:filtered_request_params) { { 'sensitive_request' => '[FILTERED]' } }
+
+      let(:changeset) {
+        double(
+          query_params: filtered_query_params,
+          body_params: filtered_body_params,
+          request_params: filtered_request_params
+        )
+      }
 
       before do
-        stub_const 'SensitiveDataFilter::Mask', mask
-        allow(mask).to receive(:mask).with(query_params).and_return filtered_query_params
-        allow(mask).to receive(:mask).with(body_params).and_return filtered_body_params
-        env_parser.mask!
+        env_parser.mutate(changeset)
       end
 
-      specify { expect(mask).to have_received(:mask).with query_params }
-      specify { expect(mask).to have_received(:mask).with body_params }
       specify { expect(env_parser.query_params).to eq filtered_query_params }
       specify { expect(env_parser.body_params).to eq filtered_body_params }
+      specify { expect(env_parser.request_params).to eq filtered_request_params }
     end
   end
 end

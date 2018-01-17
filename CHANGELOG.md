@@ -5,6 +5,8 @@ This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
 ## Unreleased
 ### Changed
+- [TT-3520] No longer clone the "env" middleware variable
+- [TT-3521] filter action dispatch parameter fields
 - [TT-3523] Update gem dependencies
 
 ## [0.3.0] - 2016-12-28

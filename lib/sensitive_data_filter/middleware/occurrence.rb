@@ -9,9 +9,9 @@ module SensitiveDataFilter
 
       attr_reader :matches
 
-      def initialize(original_env_parser, filtered_env_parser, matches)
+      def initialize(original_env_parser, changeset, matches)
         @original_env_parser = original_env_parser
-        @filtered_env_parser = filtered_env_parser
+        @changeset           = changeset
         @matches             = matches
       end
 
@@ -28,22 +28,26 @@ module SensitiveDataFilter
       end
 
       def filtered_query_params
-        @filtered_env_parser.query_params
+        @changeset.query_params
       end
 
       def filtered_body_params
-        @filtered_env_parser.body_params
+        @changeset.body_params
+      end
+
+      def changeset
+        @changeset
       end
 
       def original_env
         @original_env_parser.env
       end
 
-      def filtered_env
-        @filtered_env_parser.env
+      def url
+        SensitiveDataFilter::Mask.mask(@original_env_parser.url)
       end
 
-      def_delegators :@filtered_env_parser, :request_method, :url, :content_type, :session
+      def_delegators :@original_env_parser, :request_method, :content_type, :session
 
       def matches_count
         @matches.map { |type, matches| [type, matches.count] }.to_h
