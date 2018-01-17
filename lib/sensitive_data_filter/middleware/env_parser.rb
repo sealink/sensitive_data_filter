@@ -6,6 +6,7 @@ module SensitiveDataFilter
     class EnvParser
       QUERY_STRING = 'QUERY_STRING'.freeze
       RACK_INPUT   = 'rack.input'.freeze
+      REQUEST_PARAMS = 'action_dispatch.request.request_parameters'.freeze
 
       extend Forwardable
 
@@ -28,12 +29,20 @@ module SensitiveDataFilter
         @parameter_parser.parse(body)
       end
 
+      def request_params
+        @env[REQUEST_PARAMS]
+      end
+
       def query_params=(new_params)
         @env[QUERY_STRING] = Rack::Utils.build_query(new_params)
       end
 
       def body_params=(new_params)
         @env[RACK_INPUT] = StringIO.new @parameter_parser.unparse(new_params)
+      end
+
+      def request_params=(new_params)
+        @env[REQUEST_PARAMS] = new_params
       end
 
       def mutate(mutation)
