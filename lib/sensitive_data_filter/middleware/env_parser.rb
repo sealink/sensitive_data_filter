@@ -34,15 +34,15 @@ module SensitiveDataFilter
       end
 
       def query_params=(new_params)
-        @env[QUERY_STRING] = Rack::Utils.build_query(new_params)
+        set_key_if_exists(QUERY_STRING, Rack::Utils.build_query(new_params))
       end
 
       def body_params=(new_params)
-        @env[RACK_INPUT] = StringIO.new @parameter_parser.unparse(new_params)
+        set_key_if_exists(RACK_INPUT, StringIO.new(@parameter_parser.unparse(new_params)))
       end
 
       def request_params=(new_params)
-        @env[REQUEST_PARAMS] = new_params
+        set_key_if_exists(REQUEST_PARAMS, new_params)
       end
 
       def mutate(mutation)
@@ -54,6 +54,10 @@ module SensitiveDataFilter
       def_delegators :@request, :ip, :request_method, :url, :content_type, :session
 
       private
+
+      def set_key_if_exists(key, value)
+        @env[key] = value if @env.key?(key)
+      end
 
       def file_upload?
         @request.media_type == 'multipart/form-data'

@@ -1,7 +1,9 @@
 sudo: false
 language: ruby
 rvm:
-  - 2.3.0 # The version of RVM installed on Travis doesn't yet recognise 2.3 as an alias of 2.3.0
+  - 2.3
+  - 2.4
+  - 2.5
 matrix:
   include:
     - rvm: 2.1

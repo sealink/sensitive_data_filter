@@ -120,9 +120,19 @@ describe SensitiveDataFilter::Middleware::EnvParser do
     let(:request_params) { { 'sensitive_request' => 'sensitive_request' } }
 
     before do
+      # Request params are a rails thing not rack so by default they will
+      # oot exists.
+      env[SensitiveDataFilter::Middleware::EnvParser::REQUEST_PARAMS] = { sensitive_request: 'sensitive_request' }
       env_parser.query_params = { sensitive_query: 'sensitive_data' }
       env_parser.body_params  = { sensitive_body: 'sensitive_data' }
-      env_parser.request_params  = { sensitive_request: 'sensitive_request' }
+    end
+
+    context 'dont mutate non existing keys' do
+      before do
+        env.delete(SensitiveDataFilter::Middleware::EnvParser::REQUEST_PARAMS)
+        env_parser.request_params = { test: 'request' }
+      end
+      specify { expect(env.key?(SensitiveDataFilter::Middleware::EnvParser::REQUEST_PARAMS)).to eq false }
     end
 
     context 'before mutation' do
