@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
-## [0.4.1] - 2018-03-07
+## [0.4.1] - 2018-03-08
 ### Changed
 - [TT-3686] Don't mutate env vars unless the key already exists
 
