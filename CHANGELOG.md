@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
+## [0.5.0]
+- [TT-5815] Relax version dependencies and tested on latest ruby versions
+
 ## [0.4.1] - 2018-03-08
 ### Changed
 - [TT-3686] Don't mutate env vars unless the key already exists
