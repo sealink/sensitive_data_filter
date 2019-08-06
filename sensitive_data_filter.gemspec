@@ -21,18 +21,18 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 2.1'
+  spec.required_ruby_version = '>= 2.4'
 
-  spec.add_dependency 'rack', '>= 1.4'
-  spec.add_dependency 'facets', '~> 3.1'
-  spec.add_dependency 'credit_card_validations', '~> 3.4'
+  spec.add_dependency 'rack'
+  spec.add_dependency 'facets'
+  spec.add_dependency 'credit_card_validations'
 
-  spec.add_development_dependency 'bundler', '~> 1.13'
-  spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'rspec', '~> 3.5'
-  spec.add_development_dependency 'coverage-kit', '~> 0.1'
-  spec.add_development_dependency 'simplecov-rcov', '~> 0.2'
-  spec.add_development_dependency 'coveralls', '~> 0.8'
-  spec.add_development_dependency 'rubocop', '~> 0.52'
-  spec.add_development_dependency 'travis', '~> 1.8'
+  spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'coverage-kit'
+  spec.add_development_dependency 'simplecov-rcov'
+  spec.add_development_dependency 'coveralls'
+  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'travis'
 end

@@ -1,16 +1,10 @@
-sudo: false
 language: ruby
 rvm:
-  - 2.3
   - 2.4
   - 2.5
-matrix:
-  include:
-    - rvm: 2.1
-      gemfile: gemfiles/Gemfile.ruby-2.1.rb
-    - rvm: 2.2
-      gemfile: gemfiles/Gemfile.ruby-2.2.rb
-before_install: gem install bundler -v 1.13.6
-notifications:
-  email:
-    - support@travellink.com.au
+  - 2.6
+script: "bundle exec rake spec"
+sudo: false
+cache: bundler
+before_install:
+  - gem install bundler
