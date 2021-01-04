@@ -1,7 +1,7 @@
 # SensitiveDataFilter
 
 [![Gem Version](https://badge.fury.io/rb/sensitive_data_filter.svg)](http://badge.fury.io/rb/sensitive_data_filter)
-[![Build Status](https://github.com/sealink/pansophy/workflows/Build%20and%20Test/badge.svg?branch=master)](https://github.com/sealink/pansophy/actions)
+[![Build Status](https://github.com/sealink/sensitive_data_filter/workflows/Build%20and%20Test/badge.svg?branch=master)](https://github.com/sealink/sensitive_data_filter/actions)
 [![Coverage Status](https://coveralls.io/repos/sealink/sensitive_data_filter/badge.svg)](https://coveralls.io/r/sealink/sensitive_data_filter)
 [![Code Climate](https://codeclimate.com/github/sealink/sensitive_data_filter/badges/gpa.svg)](https://codeclimate.com/github/sealink/sensitive_data_filter)
 
