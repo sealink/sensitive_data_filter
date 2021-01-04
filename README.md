@@ -1,9 +1,8 @@
 # SensitiveDataFilter
 
 [![Gem Version](https://badge.fury.io/rb/sensitive_data_filter.svg)](http://badge.fury.io/rb/sensitive_data_filter)
-[![Build Status](https://travis-ci.org/sealink/sensitive_data_filter.svg?branch=master)](https://travis-ci.org/sealink/sensitive_data_filter)
+[![Build Status](https://github.com/sealink/pansophy/workflows/Build%20and%20Test/badge.svg?branch=master)](https://github.com/sealink/pansophy/actions)
 [![Coverage Status](https://coveralls.io/repos/sealink/sensitive_data_filter/badge.svg)](https://coveralls.io/r/sealink/sensitive_data_filter)
-[![Dependency Status](https://gemnasium.com/sealink/sensitive_data_filter.svg)](https://gemnasium.com/sealink/sensitive_data_filter)
 [![Code Climate](https://codeclimate.com/github/sealink/sensitive_data_filter/badges/gpa.svg)](https://codeclimate.com/github/sealink/sensitive_data_filter)
 
 A Rack Middleware filter for sensitive data
@@ -37,7 +36,7 @@ E.g. for Rails, add the following in application.rb
 config.middleware.insert_before 'ActionDispatch::ParamsParser', SensitiveDataFilter::Middleware::Filter
 ```
 
-To ensure that no sensitive data is accessed at any level of the stack, insert the middleware at the top of the stack. 
+To ensure that no sensitive data is accessed at any level of the stack, insert the middleware at the top of the stack.
 
 E.g.
 
@@ -49,7 +48,7 @@ config.middleware.insert_before 0, SensitiveDataFilter::Middleware::Filter
 #### Important note for Rails
 
 Rails logs the URI of the request in ``Rails::Rack::Logger``. At this point of the stack, Rails generally has not yet set the session in the env.
-If you insert the sensitive data filtering middleware before this middleware you will prevent sensitive data from appearing in the logs, 
+If you insert the sensitive data filtering middleware before this middleware you will prevent sensitive data from appearing in the logs,
 but you will not have access to the session via the occurrence or the env in the occurrence handling block.
 
 ### Configuration
@@ -57,7 +56,7 @@ but you will not have access to the session via the occurrence or the env in the
 ```ruby
 SensitiveDataFilter.config do |config|
   config.enable_types :credit_card # Already defaults to :credit_card if not specified
-  config.on_occurrence do |occurrence| 
+  config.on_occurrence do |occurrence|
     # Report occurrence
   end
   config.whitelist pattern1, pattern2 # Allows specifying patterns to whitelist matches
@@ -83,7 +82,7 @@ An occurrence object has the following properties:
 * changeset:             the modified rack env variables
 
 It also exposes `to_h` and `to_s` methods for hash and string representation respectively.  
-Please note that these representations omit sensitive data, 
+Please note that these representations omit sensitive data,
 i.e. `original_query_params`, `original_body_params` and `matches` are not included.
 
 #### Important Notes
@@ -106,10 +105,10 @@ filtered_body_params = if @occurrence.filtered_body_params.is_a? Hash
 
 #### Whitelisting
 
-A list of whitelisting patterns can be passed to `config.whitelist`. 
+A list of whitelisting patterns can be passed to `config.whitelist`.
 Any sensitive data match which also matches any of these patterns will be ignored.
 
-A list of whitelisting patterns can be passed to `config.whitelist_key`. 
+A list of whitelisting patterns can be passed to `config.whitelist_key`.
 When scanning and matching hashes, any value whose key matches any of these patterns will be ignored.
 
 #### Parameter Parsing
@@ -119,9 +118,9 @@ The arguments for `config.register_parser` are:
 * a pattern to match the content type
 * a parser for the parameters
 * an unparser to convert parameters back to the encoded format
- 
+
 The parser and unparser must be objects that respond to `call` and accept the parameters as an argument (e.g. procs or lambdas).  
-The parser should handle parsing exceptions gracefully by returning the arguments. 
+The parser should handle parsing exceptions gracefully by returning the arguments.
 This ensures that sensitive data scanning and masking is applied on the raw parameters.
 
 ## Development
@@ -129,6 +128,18 @@ This ensures that sensitive data scanning and masking is applied on the raw para
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+
+## Release
+
+To publish a new version of this gem the following steps must be taken.
+
+* Update the version in the following files
+  ```
+    CHANGELOG.md
+    lib/sensitive_data_filter/version.rb
+  ````
+* Create a tag using the format v0.1.0
+* Follow build progress in GitHub actions
 
 ## Contributing
 
@@ -138,4 +149,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/sealin
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
