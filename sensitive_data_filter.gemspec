@@ -31,8 +31,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'coverage-kit'
-  spec.add_development_dependency 'simplecov-rcov'
-  spec.add_development_dependency 'coveralls'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'pry'
 end
