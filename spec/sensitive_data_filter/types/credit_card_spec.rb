@@ -11,6 +11,7 @@ describe SensitiveDataFilter::Types::CreditCard do
         'American Express Corporate' => ['3787 344936 71000'],
         'Australian BankCard'        => ['5610 5910 8101 8250'],
         'Diners Club'                => ['3056 930902 5904', '3852 000002 3237'],
+        # https://github.com/didww/credit_card_validations/issues/110
         'Discover'                   => [CreditCardValidations::Factory.random(:discover), '6011 0009 9013 9424'],
         'JCB'                        => ['3530 1113 3330 0000', '3566 0020 2036 0505'],
         'MasterCard'                 => ['5555 5555 5555 4444', '5105 1051 0510 5100'],
