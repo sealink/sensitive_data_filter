@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 This changelog adheres to [Keep a CHANGELOG](http://keepachangelog.com/).
 
+## Unreleased
+
+- [PLAT-183] Ruby 3.1 and publish coverage with github action
+
 ## 0.6.0
 
 - [TT-8626] Update to build with github actions / ruby 3.0 / rails 6.1
